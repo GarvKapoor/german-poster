@@ -9,7 +9,6 @@ import { RegionalMap } from './components/RegionalMap';
 import { GenderQuiz } from './components/GenderQuiz';
 import { DialogueSimulator } from './components/DialogueSimulator';
 import { MarqueeBanner } from './components/MarqueeBanner';
-import { FloatingPosterHUD } from './components/FloatingPosterHUD';
 import { FoodDetailModal } from './components/FoodDetailModal';
 import { PosterExportModal } from './components/PosterExportModal';
 import { FoodItem, MealTime } from './data/foodData';
@@ -35,7 +34,7 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-400 selection:text-stone-950 relative overflow-x-hidden">
       
-      {/* Sticky Top Navigation Header with German Tricolor Scroll Progress Bar */}
+      {/* Sticky Top Header (Clean: Logo + Audio Speed + Sound + Lang + Print) */}
       <Header
         lang={lang}
         setLang={setLang}
@@ -46,13 +45,10 @@ export const App: React.FC = () => {
         setSlowAudio={setSlowAudio}
       />
 
-      {/* Floating Side HUD for Quick Section Jumps */}
-      <FloatingPosterHUD />
-
       {/* CONTINUOUS SINGLE-PAGE POSTER JOURNEY */}
       <main className="flex-1 w-full space-y-0">
         
-        {/* 1. HERO POSTER SHOWCASE */}
+        {/* 1. HERO POSTER SHOWCASE (DIV 1 + DIV 2: Fill & Cover the Whole Page) */}
         <div id="intro" className="w-full">
           <PosterHero
             selectedMeal={selectedMeal}
@@ -135,10 +131,10 @@ export const App: React.FC = () => {
       />
 
       {/* Cohesive Poster Footer */}
-      <footer className="border-t border-stone-800/80 bg-stone-950 py-12 px-4 sm:px-8 xl:px-12 text-center text-xs text-stone-500 space-y-3">
+      <footer className="border-t border-stone-800/80 bg-stone-950 py-12 px-4 sm:px-8 xl:px-14 text-center text-xs text-stone-500 space-y-3">
         <div className="flex flex-wrap items-center justify-center gap-3">
           <span className="text-2xl">🥨</span>
-          <span className="font-display font-extrabold text-base text-white tracking-wide">
+          <span className="font-display font-black text-lg text-white tracking-wide">
             KULINARISCHES DEUTSCHLAND
           </span>
           <span className="text-stone-600">|</span>
