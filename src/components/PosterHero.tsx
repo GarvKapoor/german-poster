@@ -6,6 +6,8 @@ import { sound } from '../utils/sound';
 import { KineticHeroTitle } from './KineticHeroTitle';
 
 interface PosterHeroProps {
+  timeHour: number;
+  setTimeHour: (hour: number) => void;
   selectedMeal: MealTime;
   setSelectedMeal: (meal: MealTime) => void;
   lang: 'de' | 'en';
@@ -14,6 +16,8 @@ interface PosterHeroProps {
 }
 
 export const PosterHero: React.FC<PosterHeroProps> = ({
+  timeHour,
+  setTimeHour,
   selectedMeal,
   setSelectedMeal,
   lang,
@@ -66,6 +70,8 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
       
       {/* 1. MASTER KINETIC HEADLINE HERO (DIV 1: Covers full screen, preserves pristine aesthetic) */}
       <KineticHeroTitle
+        timeHour={timeHour}
+        setTimeHour={setTimeHour}
         selectedMeal={selectedMeal}
         setSelectedMeal={setSelectedMeal}
         lang={lang}
@@ -249,6 +255,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
                     onClick={() => {
                       sound.playClick();
                       setSelectedMeal(m);
+                      if (m === 'fruehstueck') setTimeHour(8);
+                      if (m === 'mittagessen') setTimeHour(13);
+                      if (m === 'kaffee') setTimeHour(16);
+                      if (m === 'abendbrot') setTimeHour(19);
                     }}
                     className={`py-2 px-1 text-[11px] font-bold rounded-xl transition-all truncate text-center ${
                       selectedMeal === m

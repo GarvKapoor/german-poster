@@ -6,15 +6,15 @@ import { HorizontalFoodReel } from './components/HorizontalFoodReel';
 import { FoodGrid } from './components/FoodGrid';
 import { PlateBuilder } from './components/PlateBuilder';
 import { RegionalMap } from './components/RegionalMap';
-import { GenderQuiz } from './components/GenderQuiz';
-import { DialogueSimulator } from './components/DialogueSimulator';
 import { MarqueeBanner } from './components/MarqueeBanner';
+import { FloatingPosterHUD } from './components/FloatingPosterHUD';
 import { FoodDetailModal } from './components/FoodDetailModal';
 import { PosterExportModal } from './components/PosterExportModal';
 import { FoodItem, MealTime } from './data/foodData';
 import { initGermanVoice } from './utils/speech';
 
 export const App: React.FC = () => {
+  const [timeHour, setTimeHour] = useState<number>(12);
   const [selectedMeal, setSelectedMeal] = useState<MealTime>('mittagessen');
   const [selectedFoodModal, setSelectedFoodModal] = useState<FoodItem | null>(null);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
@@ -26,6 +26,19 @@ export const App: React.FC = () => {
     initGermanVoice();
   }, []);
 
+  // Synchronize meal time whenever timeHour is adjusted via the center navbar slider
+  useEffect(() => {
+    if (timeHour < 11) {
+      if (selectedMeal !== 'fruehstueck') setSelectedMeal('fruehstueck');
+    } else if (timeHour < 15) {
+      if (selectedMeal !== 'mittagessen') setSelectedMeal('mittagessen');
+    } else if (timeHour < 18) {
+      if (selectedMeal !== 'kaffee') setSelectedMeal('kaffee');
+    } else {
+      if (selectedMeal !== 'abendbrot') setSelectedMeal('abendbrot');
+    }
+  }, [timeHour]);
+
   const scrollToDishes = () => {
     const el = document.getElementById('katalog');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -34,8 +47,12 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-400 selection:text-stone-950 relative overflow-x-hidden">
       
-      {/* Sticky Top Header (Clean: Logo + Audio Speed + Sound + Lang + Print) */}
+      {/* Sticky Top Header with Time Bar in Center of Navbar */}
       <Header
+        timeHour={timeHour}
+        setTimeHour={setTimeHour}
+        selectedMeal={selectedMeal}
+        setSelectedMeal={setSelectedMeal}
         lang={lang}
         setLang={setLang}
         soundEnabled={soundEnabled}
@@ -45,12 +62,17 @@ export const App: React.FC = () => {
         setSlowAudio={setSlowAudio}
       />
 
+      {/* Restored Floating Side Navigation HUD */}
+      <FloatingPosterHUD />
+
       {/* CONTINUOUS SINGLE-PAGE POSTER JOURNEY */}
       <main className="flex-1 w-full space-y-0">
         
-        {/* 1. HERO POSTER SHOWCASE (DIV 1 + DIV 2: Fill & Cover the Whole Page) */}
+        {/* 1. HERO POSTER SHOWCASE (DIV 1 + DIV 2: Fill & Cover Whole Page) */}
         <div id="intro" className="w-full">
           <PosterHero
+            timeHour={timeHour}
+            setTimeHour={setTimeHour}
             selectedMeal={selectedMeal}
             setSelectedMeal={setSelectedMeal}
             lang={lang}
@@ -59,7 +81,7 @@ export const App: React.FC = () => {
           />
         </div>
 
-        {/* 2. INFINITE TICKER MARQUEE (100% Full Width) */}
+        {/* 2. INFINITE AUTO-SCROLLING TICKER MARQUEE (100% Full Width) */}
         <MarqueeBanner variant="gold" />
 
         {/* 3. FULL-WIDTH 4-COLUMN DAY HORIZON PANORAMA */}
@@ -74,11 +96,13 @@ export const App: React.FC = () => {
         </div>
 
         {/* 4. EDGE-TO-EDGE HORIZONTAL FOOD REEL CAROUSEL */}
-        <HorizontalFoodReel
-          onSelectFood={(item) => setSelectedFoodModal(item)}
-          lang={lang}
-          slowAudio={slowAudio}
-        />
+        <div id="karussell" className="w-full">
+          <HorizontalFoodReel
+            onSelectFood={(item) => setSelectedFoodModal(item)}
+            lang={lang}
+            slowAudio={slowAudio}
+          />
+        </div>
 
         {/* 5. DEEP DIVE FOOD CATALOG */}
         <div id="katalog" className="w-full">
@@ -91,7 +115,7 @@ export const App: React.FC = () => {
           />
         </div>
 
-        {/* 6. REVERSE QUOTE MARQUEE BANNER */}
+        {/* 6. REVERSE QUOTE AUTO-SCROLLING MARQUEE BANNER */}
         <MarqueeBanner reverse variant="dark" />
 
         {/* 7. INTERACTIVE KITCHEN PLATE COMPOSER */}
@@ -104,15 +128,8 @@ export const App: React.FC = () => {
           <RegionalMap lang={lang} slowAudio={slowAudio} />
         </div>
 
-        {/* 9. DER-DIE-DAS GRAMMAR DUEL GAME */}
-        <div id="spiel" className="w-full">
-          <GenderQuiz lang={lang} slowAudio={slowAudio} />
-        </div>
-
-        {/* 10. REAL-LIFE RESTAURANT & BAKERY DIALOGUE LAB */}
-        <div id="dialoge" className="w-full">
-          <DialogueSimulator lang={lang} slowAudio={slowAudio} />
-        </div>
+        {/* Note: The last two divs ("Der, Die or Das?" and "Order & speak in German")
+            have been cleanly removed as requested by the user */}
 
       </main>
 

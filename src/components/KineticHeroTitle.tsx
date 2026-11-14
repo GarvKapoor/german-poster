@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, Sun, Moon } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { speakGerman } from '../utils/speech';
 import confetti from 'canvas-confetti';
 import { MealTime } from '../data/foodData';
 
 interface KineticHeroTitleProps {
+  timeHour: number;
+  setTimeHour: (hour: number) => void;
   selectedMeal: MealTime;
   setSelectedMeal: (meal: MealTime) => void;
   lang: 'de' | 'en';
@@ -31,6 +33,8 @@ const ORBITING_FOODS: FloatingFood[] = [
 ];
 
 export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
+  timeHour,
+  setTimeHour,
   selectedMeal,
   setSelectedMeal,
   lang,
@@ -40,27 +44,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredLetter, setHoveredLetter] = useState<number | null>(null);
   const [activeFood, setActiveFood] = useState<FloatingFood | null>(null);
-  const [timeHour, setTimeHour] = useState<number>(12);
   const [isSpeakingTitle, setIsSpeakingTitle] = useState(false);
-
-  useEffect(() => {
-    if (timeHour < 11) {
-      if (selectedMeal !== 'fruehstueck') setSelectedMeal('fruehstueck');
-    } else if (timeHour < 15) {
-      if (selectedMeal !== 'mittagessen') setSelectedMeal('mittagessen');
-    } else if (timeHour < 18) {
-      if (selectedMeal !== 'kaffee') setSelectedMeal('kaffee');
-    } else {
-      if (selectedMeal !== 'abendbrot') setSelectedMeal('abendbrot');
-    }
-  }, [timeHour]);
-
-  useEffect(() => {
-    if (selectedMeal === 'fruehstueck' && (timeHour < 6 || timeHour >= 11)) setTimeHour(8);
-    if (selectedMeal === 'mittagessen' && (timeHour < 11 || timeHour >= 15)) setTimeHour(13);
-    if (selectedMeal === 'kaffee' && (timeHour < 15 || timeHour >= 18)) setTimeHour(16);
-    if (selectedMeal === 'abendbrot' && timeHour < 18) setTimeHour(19);
-  }, [selectedMeal]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -232,10 +216,8 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
       />
 
-      {/* Top Banner: Status & Sky Slider */}
-      <div className="relative z-10 w-full flex flex-wrap items-center justify-between gap-4 border-b border-stone-800/80 pb-5">
-        
-        {/* German Flag Badge */}
+      {/* Top Banner Status */}
+      <div className="relative z-10 w-full flex items-center justify-between border-b border-stone-800/80 pb-4">
         <div className="flex items-center gap-3">
           <div className="flex flex-col gap-0.5 w-5 h-4 rounded overflow-hidden shadow">
             <span className="h-1.5 bg-stone-950 w-full" />
@@ -252,37 +234,13 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
           </div>
         </div>
 
-        {/* Dynamic Sun/Moon Time Arc Controller */}
-        <div className="flex items-center gap-4 bg-stone-900/90 px-4 py-1.5 rounded-full border border-stone-700/80 shadow-lg">
-          <span className="text-xs font-mono text-stone-300 flex items-center gap-1.5">
-            {timeHour < 18 ? <Sun className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '20s' }} /> : <Moon className="w-3.5 h-3.5 text-indigo-300" />}
-            <span className="font-bold text-white">{String(timeHour).padStart(2, '0')}:00 Uhr</span>
-          </span>
-
-          <input
-            type="range"
-            min="6"
-            max="22"
-            value={timeHour}
-            onChange={(e) => {
-              sound.playClick();
-              setTimeHour(parseInt(e.target.value, 10));
-            }}
-            className="w-28 sm:w-40 h-1.5 bg-stone-700 rounded-lg appearance-none cursor-pointer accent-amber-400"
-            title="Tageszeit regeln"
-          />
-
-          <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 hidden sm:inline-block">
-            {selectedMeal === 'fruehstueck' && 'Frühstück'}
-            {selectedMeal === 'mittagessen' && 'Mittag'}
-            {selectedMeal === 'kaffee' && 'Kaffee'}
-            {selectedMeal === 'abendbrot' && 'Abendbrot'}
-          </span>
+        <div className="text-xs font-mono text-stone-400 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>{lang === 'de' ? 'Echtzeit-Mahlzeitensteuerung aktiv' : 'Real-time Day Clock Active'}</span>
         </div>
-
       </div>
 
-      {/* Floating Interactive 3D Satellites (Naturally placed with tasteful proportions) */}
+      {/* Floating Interactive 3D Satellites */}
       {ORBITING_FOODS.map((food) => (
         <div
           key={food.id}
@@ -314,7 +272,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         </div>
       )}
 
-      {/* ELEGANT TYPOGRAPHIC POSTER HEADLINE (Preserving the main aesthetic!) */}
+      {/* ELEGANT TYPOGRAPHIC POSTER HEADLINE */}
       <div 
         onClick={handleTitleClick}
         className="relative z-10 text-center py-6 sm:py-10 space-y-4 cursor-pointer my-auto max-w-5xl mx-auto"
@@ -399,7 +357,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
       </div>
 
-      {/* Bottom Live Interactive Meal Indicators spanning full width */}
+      {/* Bottom Live Interactive Meal Indicators */}
       <div className="relative z-10 pt-6 border-t border-stone-800/80 grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
         {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal) => {
           const isCurrent = selectedMeal === meal;
@@ -409,6 +367,11 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
               onClick={() => {
                 sound.playClick();
                 setSelectedMeal(meal);
+                // Also update timeHour to match
+                if (meal === 'fruehstueck') setTimeHour(8);
+                if (meal === 'mittagessen') setTimeHour(13);
+                if (meal === 'kaffee') setTimeHour(16);
+                if (meal === 'abendbrot') setTimeHour(19);
               }}
               className={`p-3.5 rounded-2xl border text-left transition-all ${
                 isCurrent

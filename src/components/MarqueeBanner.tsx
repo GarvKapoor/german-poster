@@ -31,19 +31,19 @@ export const MarqueeBanner: React.FC<{ reverse?: boolean; variant?: 'gold' | 'da
   const displayList = reverse ? quotes : items;
 
   return (
-    <div className={`w-full overflow-hidden py-3 border-y select-none transition-colors ${
+    <div className={`w-full overflow-hidden py-3.5 border-y select-none transition-colors relative ${
       variant === 'gold'
         ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
-        : 'bg-stone-900/90 border-stone-800 text-stone-400'
+        : 'bg-stone-900/90 border-stone-800 text-stone-300'
     }`}>
-      <div className={`flex w-max gap-8 font-mono text-xs sm:text-sm font-bold tracking-widest uppercase ${
-        reverse ? 'animate-marqueeReverse' : 'animate-marquee'
+      <div className={`font-mono text-xs sm:text-sm font-bold tracking-widest uppercase ${
+        reverse ? 'animate-ticker-reverse' : 'animate-ticker'
       }`}>
         {/* Render twice for infinite seamless loop */}
         {displayList.concat(displayList).map((text, idx) => (
-          <span key={idx} className="flex items-center gap-4 whitespace-nowrap">
+          <span key={idx} className="flex items-center gap-6 px-4 whitespace-nowrap">
             <span>{text}</span>
-            <span className="text-amber-500">•</span>
+            <span className="text-amber-400">•</span>
           </span>
         ))}
       </div>

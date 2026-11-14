@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Printer, Globe } from 'lucide-react';
+import { Volume2, VolumeX, Printer, Globe, Sun, Moon } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { MealTime } from '../data/foodData';
 
 interface HeaderProps {
+  timeHour: number;
+  setTimeHour: (hour: number) => void;
+  selectedMeal: MealTime;
+  setSelectedMeal: (meal: MealTime) => void;
   lang: 'de' | 'en';
   setLang: (lang: 'de' | 'en') => void;
   soundEnabled: boolean;
@@ -13,6 +18,10 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
+  timeHour,
+  setTimeHour,
+  selectedMeal,
+  setSelectedMeal,
   lang,
   setLang,
   soundEnabled,
@@ -52,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/85 border-b border-stone-800/80 transition-all duration-300">
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/90 border-b border-stone-800/80 transition-all duration-300">
       
       {/* German Tricolor Scroll Progress Bar at the very top */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-stone-900 overflow-hidden">
@@ -63,34 +72,66 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="w-full px-4 sm:px-8 xl:px-12 2xl:px-16">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 gap-4">
           
-          {/* Brand Logo with German Flag Accent */}
+          {/* Left: Brand Logo with German Flag Accent */}
           <div 
             onClick={scrollToTop}
             className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
           >
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 via-red-600 to-stone-900 p-0.5 shadow-lg shadow-amber-500/10 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 via-red-600 to-stone-900 p-0.5 shadow-lg shadow-amber-500/10 group-hover:scale-105 transition-transform duration-300">
               <div className="w-full h-full bg-stone-950 rounded-[14px] flex items-center justify-center text-2xl">
                 🥨
               </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-display font-black text-2xl tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                <span className="font-display font-black text-xl tracking-tight text-white group-hover:text-amber-400 transition-colors">
                   KULINARIK
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-amber-400/20 text-amber-300 border border-amber-400/30">
                   DEUTSCHLAND
                 </span>
               </div>
-              <p className="text-xs text-stone-400">
-                {lang === 'de' ? 'Das interaktive Bildungsplakat' : 'Interactive German Culinary Poster'}
+              <p className="text-xs text-stone-400 hidden sm:block">
+                {lang === 'de' ? 'Das interaktive Bildungsplakat' : 'Interactive German Poster'}
               </p>
             </div>
           </div>
 
-          {/* Utility Tools: Language, Audio Speed, Sound FX, Print */}
+          {/* Center: Dynamic Sun/Moon Time Arc Controller (Covers the center of navbar) */}
+          <div className="flex items-center gap-3 sm:gap-4 bg-stone-900/90 px-4 sm:px-6 py-2 rounded-2xl border border-stone-700/80 shadow-inner flex-1 max-w-xl mx-2 sm:mx-6 justify-center">
+            <span className="text-xs font-mono text-stone-300 flex items-center gap-1.5 shrink-0">
+              {timeHour < 18 ? (
+                <Sun className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '20s' }} />
+              ) : (
+                <Moon className="w-4 h-4 text-indigo-300" />
+              )}
+              <span className="font-bold text-white text-xs sm:text-sm">{String(timeHour).padStart(2, '0')}:00 Uhr</span>
+            </span>
+
+            <input
+              type="range"
+              min="6"
+              max="22"
+              value={timeHour}
+              onChange={(e) => {
+                sound.playClick();
+                setTimeHour(parseInt(e.target.value, 10));
+              }}
+              className="w-full max-w-[140px] sm:max-w-[220px] h-2 bg-stone-700 rounded-lg appearance-none cursor-pointer accent-amber-400"
+              title="Tageszeit regeln (06:00 - 22:00 Uhr)"
+            />
+
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-300 px-2.5 py-1 rounded-xl bg-amber-400/10 border border-amber-400/20 shrink-0 hidden md:inline-block">
+              {selectedMeal === 'fruehstueck' && '🌅 Frühstück'}
+              {selectedMeal === 'mittagessen' && '☀️ Mittagessen'}
+              {selectedMeal === 'kaffee' && '☕ Kaffee & Kuchen'}
+              {selectedMeal === 'abendbrot' && '🌙 Abendbrot'}
+            </span>
+          </div>
+
+          {/* Right: Audio Speed, Sound FX, Lang, Print */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Audio Speed */}
             <button
@@ -99,20 +140,20 @@ export const Header: React.FC<HeaderProps> = ({
                 setSlowAudio(!slowAudio);
               }}
               title={lang === 'de' ? 'Aussprache-Tempo umschalten' : 'Toggle Audio Speed'}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
                 slowAudio
                   ? 'border-amber-400 bg-amber-400/10 text-amber-300'
                   : 'border-stone-800 bg-stone-900 text-stone-400 hover:text-stone-200'
               }`}
             >
-              🐢 {slowAudio ? 'Langsam (0.7x)' : 'Normal (0.9x)'}
+              🐢 <span className="hidden sm:inline">{slowAudio ? 'Langsam' : 'Normal'}</span>
             </button>
 
             {/* Sound FX Toggle */}
             <button
               onClick={toggleSound}
               title={soundEnabled ? 'Audio stummschalten' : 'Audio aktivieren'}
-              className="p-2.5 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 hover:text-white hover:border-stone-700 transition-colors"
+              className="p-2 sm:p-2.5 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 hover:text-white hover:border-stone-700 transition-colors"
             >
               {soundEnabled ? <Volume2 className="w-4 h-4 text-amber-400" /> : <VolumeX className="w-4 h-4 text-stone-500" />}
             </button>
@@ -120,10 +161,10 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Language Switcher */}
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-900 border border-stone-800 hover:border-amber-400/50 text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-900 border border-stone-800 hover:border-amber-400/50 text-xs font-bold transition-all"
             >
-              <Globe className="w-4 h-4 text-amber-400" />
-              <span>{lang === 'de' ? 'DEUTSCH' : 'ENGLISH'}</span>
+              <Globe className="w-3.5 h-3.5 text-amber-400" />
+              <span>{lang === 'de' ? 'DE' : 'EN'}</span>
             </button>
 
             {/* Printable Poster Modal Trigger */}
@@ -132,9 +173,9 @@ export const Header: React.FC<HeaderProps> = ({
                 sound.playClick();
                 onOpenPrintModal();
               }}
-              className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-stone-950 font-bold text-xs shadow-md shadow-red-600/20 hover:scale-105 transition-all"
+              className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-stone-950 font-bold text-xs shadow-md shadow-red-600/20 hover:scale-105 transition-all"
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-3.5 h-3.5" />
               <span>{lang === 'de' ? 'Plakat Drucken' : 'Print Poster'}</span>
             </button>
           </div>
