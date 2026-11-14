@@ -59,6 +59,10 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
             src={food.image}
             alt={food.name}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&fit=crop&w=800&q=80';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
 

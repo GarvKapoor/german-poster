@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, Globe, Sun, Moon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { sound } from '../utils/sound';
 import { MealTime } from '../data/foodData';
 
@@ -59,7 +60,12 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/90 border-b border-stone-800/80 transition-all duration-300">
+    <motion.header 
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/90 border-b border-stone-800/80 transition-all duration-300"
+    >
       
       {/* German Tricolor Scroll Progress Bar at the very top */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-stone-900 overflow-hidden">
@@ -73,7 +79,10 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between h-20 gap-4">
           
           {/* Left: Brand Logo with German Flag Accent */}
-          <div 
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             onClick={scrollToTop}
             className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
           >
@@ -95,10 +104,15 @@ export const Header: React.FC<HeaderProps> = ({
                 {lang === 'de' ? 'Das interaktive Bildungsplakat' : 'Interactive German Poster'}
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Center: Dynamic Sun/Moon Time Arc Controller */}
-          <div className="flex items-center gap-3 sm:gap-4 bg-stone-900/90 px-4 sm:px-6 py-2 rounded-2xl border border-stone-700/80 shadow-inner flex-1 max-w-xl mx-2 sm:mx-6 justify-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="flex items-center gap-3 sm:gap-4 bg-stone-900/90 px-4 sm:px-6 py-2 rounded-2xl border border-stone-700/80 shadow-inner flex-1 max-w-xl mx-2 sm:mx-6 justify-center"
+          >
             <span className="text-xs font-mono text-stone-300 flex items-center gap-1.5 shrink-0">
               {timeHour < 18 ? (
                 <Sun className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '20s' }} />
@@ -127,10 +141,15 @@ export const Header: React.FC<HeaderProps> = ({
               {selectedMeal === 'kaffee' && '☕ Kaffee & Kuchen'}
               {selectedMeal === 'abendbrot' && '🌙 Abendbrot'}
             </span>
-          </div>
+          </motion.div>
 
           {/* Right: Audio Speed, Sound FX, Lang */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}
+            className="flex items-center gap-2 sm:gap-3 shrink-0"
+          >
             {/* Audio Speed */}
             <button
               onClick={() => {
@@ -164,9 +183,9 @@ export const Header: React.FC<HeaderProps> = ({
               <Globe className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'de' ? 'DE' : 'EN'}</span>
             </button>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };

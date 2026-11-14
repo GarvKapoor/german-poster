@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { sound } from '../utils/sound';
 import { speakGerman } from '../utils/speech';
 import confetti from 'canvas-confetti';
@@ -218,9 +219,12 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
 
       {/* Floating Interactive 3D Satellites */}
-      {ORBITING_FOODS.map((food) => (
-        <div
+      {ORBITING_FOODS.map((food, fIdx) => (
+        <motion.div
           key={food.id}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.3 + fIdx * 0.1, ease: 'easeOut' }}
           onClick={() => handleFoodClick(food)}
           style={{
             left: `${food.xPercent}%`,
@@ -238,7 +242,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
           <span className="mt-1 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-stone-950/95 text-stone-200 border border-stone-700 shadow-lg opacity-0 group-hover/orb:opacity-100 transition-opacity whitespace-nowrap">
             {food.article.toUpperCase()} {food.name}
           </span>
-        </div>
+        </motion.div>
       ))}
 
       {/* Active Food Tooltip Popup when clicked */}
@@ -260,8 +264,11 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
           {word1.split('').map((char, idx) => {
             const isHovered = hoveredLetter === idx;
             return (
-              <span
+              <motion.span
                 key={idx}
+                initial={{ y: 55, opacity: 0, scale: 0.7 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.15 + idx * 0.035, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => handleLetterHover(idx)}
                 onMouseLeave={() => setHoveredLetter(null)}
                 className={`font-display font-black text-5xl sm:text-7xl md:text-8xl tracking-tight inline-block transition-all duration-200 transform leading-none ${
@@ -271,7 +278,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                 }`}
               >
                 {char}
-              </span>
+              </motion.span>
             );
           })}
         </div>
@@ -282,8 +289,11 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
             const letterGlobalIndex = word1.length + idx;
             const isHovered = hoveredLetter === letterGlobalIndex;
             return (
-              <span
+              <motion.span
                 key={idx}
+                initial={{ y: 55, opacity: 0, scale: 0.7 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.55 + idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => handleLetterHover(letterGlobalIndex)}
                 onMouseLeave={() => setHoveredLetter(null)}
                 className={`font-display font-black text-5xl sm:text-7xl md:text-8xl tracking-tight inline-block transition-all duration-200 transform leading-none ${
@@ -293,16 +303,26 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                 }`}
               >
                 {char}
-              </span>
+              </motion.span>
             );
           })}
-          <span className="font-display font-black text-5xl sm:text-7xl md:text-8xl text-amber-400 animate-pulse leading-none">
+          <motion.span 
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.95, duration: 0.4 }}
+            className="font-display font-black text-5xl sm:text-7xl md:text-8xl text-amber-400 animate-pulse leading-none"
+          >
             .
-          </span>
+          </motion.span>
         </div>
 
         {/* Phonetic & Audio Pronunciation Button Bar */}
-        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <motion.div 
+          initial={{ y: 25, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.95, ease: 'easeOut' }}
+          className="pt-2 flex flex-wrap items-center justify-center gap-3"
+        >
           <button
             onClick={handleSpeakTitle}
             disabled={isSpeakingTitle}
@@ -323,25 +343,38 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
           <span className="px-3.5 py-1.5 rounded-xl bg-stone-900/70 border border-stone-800 text-xs font-serif italic text-stone-300">
             {lang === 'de' ? '✨ Berühre die Buchstaben für Harfen-Töne!' : '✨ Hover letters to play notes!'}
           </span>
-        </div>
+        </motion.div>
 
         {/* Subtitle description */}
-        <p className="font-serif italic text-lg sm:text-2xl text-stone-300 max-w-3xl mx-auto pt-2 leading-relaxed">
+        <motion.p 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1.1, ease: 'easeOut' }}
+          className="font-serif italic text-lg sm:text-2xl text-stone-300 max-w-3xl mx-auto pt-2 leading-relaxed"
+        >
           {lang === 'de' 
             ? 'Vom ofenfrischen Frühstück über das herzhafte Mittagessen bis zum gemütlichen Abendbrot.' 
             : 'From oven-fresh morning breakfast to hearty lunch and cozy evening supper.'}
-        </p>
+        </motion.p>
 
       </div>
 
       {/* Bottom Live Interactive Meal Indicators */}
-      <div className="relative z-10 pt-6 border-t border-stone-800/80 space-y-4 w-full">
+      <motion.div 
+        initial={{ y: 35, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, delay: 1.25, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 pt-6 border-t border-stone-800/80 space-y-4 w-full"
+      >
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
-          {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal) => {
+          {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal, mIdx) => {
             const isCurrent = selectedMeal === meal;
             return (
-              <button
+              <motion.button
                 key={meal}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.35 + mIdx * 0.08 }}
                 onClick={() => {
                   sound.playClick();
                   setSelectedMeal(meal);
@@ -376,13 +409,18 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                   {meal === 'kaffee' && (lang === 'de' ? 'Kaffee & Kuchen' : 'Afternoon Coffee')}
                   {meal === 'abendbrot' && (lang === 'de' ? 'Das Abendbrot' : 'Supper')}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>
 
         {/* Forward Navigation Button */}
-        <div className="flex justify-center pt-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.6 }}
+          className="flex justify-center pt-2"
+        >
           <button
             onClick={() => {
               sound.playClick();
@@ -393,8 +431,8 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
             <span>{lang === 'de' ? 'Zum 3D-Ausstellungsplakat vorblättern' : 'Explore 3D Poster Details'}</span>
             <span className="text-amber-400 group-hover/btn:text-stone-950 transition-colors">↓</span>
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
     </div>
   );

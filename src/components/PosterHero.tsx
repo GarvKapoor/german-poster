@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Volume2, Sparkles, Clock, ChevronRight } from 'lucide-react';
+import { Volume2, Sparkles, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { MealTime, MEAL_TIME_INFO } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
@@ -84,9 +85,13 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
       />
 
       {/* 2. INTERACTIVE 3D SWISS / BAUHAUS POSTER DETAILS (DIV 2: Covers full screen, balanced typography) */}
-      <div
+      <motion.div
         id="details-card"
         ref={cardRef}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
@@ -104,7 +109,13 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
         />
 
         {/* Poster Top Banner */}
-        <div className="relative z-10 border-b border-stone-800 pb-5 flex flex-wrap items-center justify-between gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: -15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="relative z-10 border-b border-stone-800 pb-5 flex flex-wrap items-center justify-between gap-4"
+        >
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
             <span className="text-xs uppercase tracking-[0.25em] font-extrabold text-stone-300">
@@ -120,13 +131,19 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
             <span className="hidden sm:inline-block text-stone-600">|</span>
             <span className="hidden sm:inline-block font-bold">KULTUR-PLAKAT № 01</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Poster Wide Body */}
         <div className="relative z-10 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-center my-auto">
           
           {/* Left Column: Bold Cultural Pillars & Speech Actions */}
-          <div className="lg:col-span-7 space-y-5">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-5"
+          >
             
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -207,10 +224,16 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: Giant Porcelain Plate Visual */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, x: 30 }}
+            whileInView={{ opacity: 1, scale: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 flex flex-col items-center justify-center"
+          >
             <div className="relative w-full max-w-sm aspect-square rounded-3xl bg-gradient-to-br from-stone-800/90 to-stone-950 border border-stone-700/80 p-6 flex flex-col justify-between shadow-2xl overflow-hidden group poster-grain">
               
               <div 
@@ -278,12 +301,18 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
               </div>
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Poster Bottom Bar */}
-        <div className="relative z-10 border-t border-stone-800 pt-4 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-400">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="relative z-10 border-t border-stone-800 pt-4 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-400"
+        >
           <div className="flex items-center gap-2">
             <span className="font-bold text-amber-400">💡 Wusstest du schon?</span>
             <span>
@@ -297,9 +326,9 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
             <span>🍺 1.500+ BRAUEREIEN</span>
             <span>🌭 1.500+ WURSTSORTEN</span>
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
 
     </div>
   );
