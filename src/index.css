@@ -75,3 +75,24 @@
 .animate-ticker-reverse:hover {
   animation-play-state: paused;
 }
+
+/* Smooth Auto-Scrolling Carousel for Food Cards */
+@keyframes foodReelSlide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-food-reel {
+  display: flex !important;
+  width: max-content !important;
+  will-change: transform;
+  animation: foodReelSlide 50s linear infinite !important;
+}
+
+.animate-food-reel:hover {
+  animation-play-state: paused;
+}
