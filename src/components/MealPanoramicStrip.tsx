@@ -38,55 +38,31 @@ export const MealPanoramicStrip: React.FC<MealPanoramicStripProps> = ({
       
       {/* Section Header spanning full width with directional scroll animation */}
       <motion.div 
-        initial={{ opacity: 0, y: dirY }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-4 sm:px-8 xl:px-12 2xl:px-16 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
       >
         <div>
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400"
-          >
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
             <Sparkles className="w-4 h-4" />
             <span>{lang === 'de' ? 'Tageszeiten-Panorama' : 'Full-Width Day Horizon'}</span>
-          </motion.div>
-          <motion.h2 
-            initial={{ opacity: 0, y: dirY * 0.7 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight"
-          >
+          </div>
+          <h2 className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight">
             {lang === 'de' ? 'Vier Mahlzeiten im Tageslauf' : 'Four Meals of the German Day'}
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="font-serif italic text-stone-400 text-sm sm:text-base mt-1"
-          >
+          </h2>
+          <p className="font-serif italic text-stone-400 text-sm sm:text-base mt-1">
             {lang === 'de' ? 'Vom Frühstück bis zum Abendbrot – bewege die Maus über die Spalten für Details.' : 'From morning breakfast to evening supper – expand each column to explore.'}
-          </motion.p>
+          </p>
         </div>
 
         {/* Total stats pill */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-3 text-xs font-mono text-stone-400 bg-stone-900 px-4 py-2 rounded-2xl border border-stone-800 self-start md:self-auto shadow-lg"
-        >
+        <div className="flex items-center gap-3 text-xs font-mono text-stone-400 bg-stone-900 px-4 py-2 rounded-2xl border border-stone-800 self-start md:self-auto shadow-lg">
           <span>📅 4 TAGESZEITEN</span>
           <span>•</span>
           <span>🍽️ {FOOD_ITEMS.length} SPEZIALITÄTEN</span>
-        </motion.div>
+        </div>
       </motion.div>
 
       {/* Full-width 4-column dynamic expanding accordion with directional entrance */}
@@ -100,10 +76,10 @@ export const MealPanoramicStrip: React.FC<MealPanoramicStripProps> = ({
           return (
             <motion.div
               key={mealId}
-              initial={{ opacity: 0, y: dirY * 1.2, scale: 0.96 }}
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.15 }}
-              transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -8, scale: 1.015 }}
               onMouseEnter={() => {
                 setHoveredMeal(mealId);

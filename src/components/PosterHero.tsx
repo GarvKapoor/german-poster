@@ -88,14 +88,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
         slowAudio={slowAudio}
       />
 
-      {/* 2. INTERACTIVE 3D SWISS / BAUHAUS POSTER DETAILS (DIV 2: Covers full screen, balanced typography) */}
-      <motion.div
+      {/* 2. INTERACTIVE 3D SWISS / BAUHAUS POSTER DETAILS (DIV 2: Always solid & visible, zero black void) */}
+      <div
         id="details-card"
         ref={cardRef}
-        initial={{ opacity: 0, y: dirY }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.15 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
@@ -332,7 +328,7 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
           </div>
         </motion.div>
 
-      </motion.div>
+      </div>
 
     </div>
   );

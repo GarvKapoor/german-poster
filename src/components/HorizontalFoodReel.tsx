@@ -44,53 +44,29 @@ export const HorizontalFoodReel: React.FC<HorizontalFoodReelProps> = ({
   return (
     <section className="w-full py-12 bg-stone-950/80 border-b border-stone-800 relative overflow-hidden group/section">
       
-      {/* Full width header with directional scroll animation */}
+      {/* Full width header with smooth entrance */}
       <motion.div 
-        initial={{ opacity: 0, y: dirY }}
+        initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-4 sm:px-8 xl:px-12 2xl:px-16 mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4"
       >
         <div>
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400"
-          >
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
             <Sparkles className="w-4 h-4" />
             <span>{lang === 'de' ? 'Automatischer Karussell-Lauf' : 'Self-Scrolling Carousel'}</span>
-          </motion.div>
-          <motion.h2 
-            initial={{ opacity: 0, y: dirY * 0.7 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black text-3xl sm:text-4xl text-white mt-1 tracking-tight"
-          >
+          </div>
+          <h2 className="font-display font-black text-3xl sm:text-4xl text-white mt-1 tracking-tight">
             {lang === 'de' ? 'Das Große Kulinarik-Karussell' : 'The Great German Culinary Reel'}
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="font-serif italic text-stone-400 text-sm mt-0.5"
-          >
+          </h2>
+          <p className="font-serif italic text-stone-400 text-sm mt-0.5">
             {lang === 'de' ? 'Läuft automatisch von selbst. Bewege die Maus darüber, um anzuhalten.' : 'Scrolls on its own horizontally. Hover any card to pause.'}
-          </motion.p>
+          </p>
         </div>
 
         {/* Live Auto-Scroll Status Indicator & Pause Toggle */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-3 self-start sm:self-auto"
-        >
+        <div className="flex items-center gap-3 self-start sm:self-auto">
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900 border border-stone-800 text-xs font-mono text-stone-300 shadow-md">
             <span className={`w-2 h-2 rounded-full ${isPaused ? 'bg-amber-400' : 'bg-emerald-400 animate-pulse'}`} />
             <span>{isPaused ? (lang === 'de' ? 'Pausiert' : 'Paused') : (lang === 'de' ? 'Auto-Lauf aktiv' : 'Auto-scrolling')}</span>
@@ -106,16 +82,17 @@ export const HorizontalFoodReel: React.FC<HorizontalFoodReelProps> = ({
           >
             {isPaused ? <Play className="w-4 h-4 text-emerald-400" /> : <Pause className="w-4 h-4 text-amber-400" />}
           </button>
-        </motion.div>
+        </div>
       </motion.div>
 
-      {/* Full-bleed Auto-Scrolling Track (Infinite Horizontal Conveyor) with smooth view animation */}
+      {/* Full-bleed Auto-Scrolling Track with smooth view animation */}
       <motion.div 
-        initial={{ opacity: 0, scale: 0.96, y: dirY * 0.8 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.15 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full overflow-hidden py-2"
+        initial={{ opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full overflow-hidden py-3"
+        style={{ perspective: 1200 }}
       >
         <div
           className={`gap-6 px-4 ${isPaused ? '' : 'animate-food-reel'}`}

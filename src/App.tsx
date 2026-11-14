@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { PosterHero } from './components/PosterHero';
 import { MealPanoramicStrip } from './components/MealPanoramicStrip';
@@ -11,6 +12,7 @@ import { FloatingPosterHUD } from './components/FloatingPosterHUD';
 import { FoodDetailModal } from './components/FoodDetailModal';
 import { FoodItem, MealTime } from './data/foodData';
 import { initGermanVoice } from './utils/speech';
+import { useScrollDirection } from './utils/useScrollDirection';
 
 export const App: React.FC = () => {
   const [timeHour, setTimeHour] = useState<number>(12);
@@ -19,9 +21,35 @@ export const App: React.FC = () => {
   const [lang, setLang] = useState<'de' | 'en'>('de');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [slowAudio, setSlowAudio] = useState(false);
+  const { tiltAngle, scrollDirection } = useScrollDirection();
 
   useEffect(() => {
     initGermanVoice();
+  }, []);
+
+  // Initialize Lenis Smooth Inertia Scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+    });
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
 
   // Synchronize meal time whenever timeHour is adjusted via the center navbar slider

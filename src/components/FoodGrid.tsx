@@ -132,8 +132,8 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
         </div>
       </div>
 
-      {/* Grid of Food Cards across full width */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-8">
+      {/* Grid of Food Cards across full width - Perfectly balanced 3-column layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full">
         {currentItems.map((item, index) => {
           const badge = getArticleBadge(item.article);
           const isSpeaking = speakingId === item.id;
@@ -141,11 +141,11 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
           return (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: dirY }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.1 }}
-              transition={{ duration: 0.5, delay: (index % 4) * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -8 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.45, delay: (index % 3) * 0.08, ease: "easeOut" }}
+              whileHover={{ y: -8, scale: 1.015 }}
               onClick={() => onSelectFood(item)}
               className="group relative rounded-[2rem] bg-stone-900/90 border border-stone-800 hover:border-amber-400/50 shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer poster-grain"
             >
