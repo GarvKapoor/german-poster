@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Volume2, Sparkles, Clock, Compass, BookOpen, ChevronRight } from 'lucide-react';
+import { Volume2, Sparkles, Clock, Compass, BookOpen, ChevronRight, Flame, HelpCircle } from 'lucide-react';
 import { MealTime, MEAL_TIME_INFO } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
+import { KineticHeroTitle } from './KineticHeroTitle';
 
 interface PosterHeroProps {
   selectedMeal: MealTime;
@@ -37,8 +38,8 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotX = -((y - centerY) / centerY) * 7;
-    const rotY = ((x - centerX) / centerX) * 7;
+    const rotX = -((y - centerY) / centerY) * 5;
+    const rotY = ((x - centerX) / centerX) * 5;
 
     setRotateX(rotX);
     setRotateY(rotY);
@@ -62,12 +63,20 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
   };
 
   return (
-    <div className="relative py-8 md:py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="relative py-6 md:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       {/* Decorative ambient background glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-1/3 left-1/4 w-[400px] h-[300px] bg-red-600/10 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Main Interactive 3D Poster Canvas */}
+      {/* 1. MASTER KINETIC HEADLINE HERO (The dynamic focal point) */}
+      <KineticHeroTitle
+        selectedMeal={selectedMeal}
+        setSelectedMeal={setSelectedMeal}
+        lang={lang}
+        slowAudio={slowAudio}
+      />
+
+      {/* 2. Interactive 3D Swiss / Bauhaus Poster Details Card */}
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -76,7 +85,7 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
           transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transition: 'transform 0.15s ease-out',
         }}
-        className="relative overflow-hidden rounded-[2.5rem] border border-stone-800 bg-stone-900/90 shadow-2xl shadow-black/80 poster-grain transition-shadow duration-300"
+        className="relative overflow-hidden rounded-[2.8rem] border border-stone-800 bg-stone-900/90 shadow-2xl shadow-black/80 poster-grain transition-shadow duration-300"
       >
         {/* Dynamic Glare Reflection Overlay */}
         <div
@@ -86,52 +95,30 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
           }}
         />
 
-        {/* Poster Top Banner: Swiss / Bauhaus Editorial Grid */}
-        <div className="border-b border-stone-800 px-6 sm:px-12 py-5 flex flex-wrap items-center justify-between gap-4 bg-stone-950/60">
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
-            <span className="text-xs uppercase tracking-[0.25em] font-extrabold text-stone-300">
-              DEUTSCHE ESSKULTUR & TRADITION
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 text-xs font-mono text-stone-400">
-            <span className="flex items-center gap-1.5 bg-stone-900 px-3 py-1 rounded-full border border-stone-800">
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
-              <span>{mealInfo.timeRange}</span>
-            </span>
-            <span className="hidden sm:inline-block text-stone-500">|</span>
-            <span className="hidden sm:inline-block">KULTUR-PLAKAT № 01</span>
-          </div>
-        </div>
-
         {/* Poster Body */}
-        <div className="px-6 sm:px-12 py-10 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="px-6 sm:px-12 py-8 md:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          {/* Left Column: Bold Typography & Cultural Story */}
+          {/* Left Column: Cultural Story & Actions */}
           <div className="lg:col-span-7 space-y-6">
             
             {/* Tagline / Subtitle */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>{lang === 'de' ? 'Kreatives Bildungsplakat' : 'Creative Educational Poster'}</span>
+              <span>{lang === 'de' ? 'Kulturelle Esskultur & Alltag' : 'Cultural Food Tradition'}</span>
             </div>
 
-            {/* Giant German Headline */}
+            {/* Sub-headline */}
             <div className="space-y-1">
-              <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl tracking-tighter leading-none text-white">
-                KULINARISCHES <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-red-500 to-amber-200">
-                  DEUTSCHLAND.
-                </span>
-              </h1>
-              <p className="font-serif italic text-xl sm:text-2xl text-stone-300 pt-2">
-                {lang === 'de' ? 'Vom Frühstück bis zum Abendbrot' : 'From morning breakfast to hearty evening supper'}
+              <h2 className="font-display font-black text-2xl sm:text-4xl text-white">
+                {lang === 'de' ? 'Die vier Säulen der deutschen Küche' : 'The Four Pillars of German Culinary Life'}
+              </h2>
+              <p className="font-serif italic text-amber-300 text-lg sm:text-xl">
+                {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn}
               </p>
             </div>
 
             {/* Cultural Paragraph */}
-            <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-xl">
+            <p className="text-stone-300 text-sm sm:text-base leading-relaxed">
               {lang === 'de' ? (
                 <>
                   Entdecke die faszinierende Vielfalt der deutschen Küche: Von ofenfrischen 
@@ -139,7 +126,7 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
                   <strong className="text-red-400 font-semibold"> Schnitzeln</strong> und 
                   <strong className="text-amber-300 font-semibold"> Käsespätzle</strong> zur Mittagszeit, über 
                   süße <strong className="text-amber-300 font-semibold">Schwarzwälder Kirschtorte</strong> bis 
-                  zur traditionellen <strong className="text-indigo-300 font-semibold">Abendbrot-Kultur</strong>.
+                  zur traditionsreichen <strong className="text-indigo-300 font-semibold">Abendbrot-Kultur</strong>.
                 </>
               ) : (
                 <>
@@ -175,13 +162,13 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
                 }}
                 className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-stone-800/80 hover:bg-stone-700/80 border border-stone-700 text-stone-200 text-sm font-semibold transition-all hover:scale-105"
               >
-                <span>{lang === 'de' ? 'Speisen erkunden' : 'Explore Dishes'}</span>
+                <span>{lang === 'de' ? 'Speisenkatalog ansehen' : 'Explore Dishes'}</span>
                 <ChevronRight className="w-4 h-4 text-amber-400" />
               </button>
             </div>
 
-            {/* Educational Badges: Der / Die / Das & UNESCO */}
-            <div className="pt-4 grid grid-cols-3 gap-3 border-t border-stone-800/80">
+            {/* Educational Badges: Der / Die / Das */}
+            <div className="pt-3 grid grid-cols-3 gap-3 border-t border-stone-800/80">
               <div className="p-3 rounded-2xl bg-stone-950/60 border border-blue-500/30">
                 <span className="text-[10px] font-black uppercase text-blue-400 block tracking-wider">Maskulin</span>
                 <span className="text-sm font-bold text-white">DER</span>
@@ -225,10 +212,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
               {/* Card Center: Animated Food Plate Visual */}
               <div className="relative z-10 my-auto text-center py-4">
                 <div className="relative inline-block">
-                  <div className="w-40 h-40 sm:w-48 sm:h-48 mx-auto rounded-full bg-gradient-to-tr from-stone-800 via-stone-700 to-stone-900 p-2 shadow-2xl border-4 border-stone-600/40 flex items-center justify-center relative">
+                  <div className="w-40 h-40 sm:w-44 sm:h-44 mx-auto rounded-full bg-gradient-to-tr from-stone-800 via-stone-700 to-stone-900 p-2 shadow-2xl border-4 border-stone-600/40 flex items-center justify-center relative">
                     {/* Steaming effect */}
                     <div className="absolute -top-6 text-xl opacity-60 animate-steam">💨</div>
-                    <div className="text-6xl sm:text-7xl select-none transform transition-transform group-hover:scale-110 duration-500 animate-float">
+                    <div className="text-6xl select-none transform transition-transform group-hover:scale-110 duration-500 animate-float">
                       {selectedMeal === 'fruehstueck' && '🥐'}
                       {selectedMeal === 'mittagessen' && '🥩'}
                       {selectedMeal === 'kaffee' && '🍰'}
@@ -237,10 +224,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
                   </div>
                 </div>
 
-                <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white mt-4 tracking-tight">
+                <h3 className="font-display font-extrabold text-2xl text-white mt-4 tracking-tight">
                   {lang === 'de' ? mealInfo.titleDe : mealInfo.titleEn}
                 </h3>
-                <p className="font-serif italic text-amber-300/90 text-sm mt-1 px-4">
+                <p className="font-serif italic text-amber-300/90 text-xs sm:text-sm mt-1 px-4">
                   {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn}
                 </p>
               </div>

@@ -18,6 +18,32 @@ class SoundManager {
     return this.ctx;
   }
 
+  // Musical letter chime (plays harp-like tone based on letter index)
+  playLetterNote(index: number) {
+    const ctx = this.getContext();
+    if (!ctx) return;
+    
+    // Pentatonic scale in A major (A4, B4, C#5, E5, F#5, A5, B5, C#6)
+    const scale = [440, 493.88, 554.37, 659.25, 739.99, 880, 987.77, 1108.73, 1318.51, 1479.98];
+    const freq = scale[index % scale.length];
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+    // Warm bell-like envelope
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  }
+
   // Soft UI click
   playClick() {
     const ctx = this.getContext();
@@ -97,6 +123,25 @@ class SoundManager {
       osc.start(ctx.currentTime + idx * 0.1);
       osc.stop(ctx.currentTime + idx * 0.1 + 0.4);
     });
+  }
+
+  // Whimsical food pop sound
+  playPop() {
+    const ctx = this.getContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(350, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.08);
+
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.08);
   }
 }
 
