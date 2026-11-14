@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, Sparkles, Sun, Moon, Flame, Utensils } from 'lucide-react';
+import { Volume2, Sun, Moon } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { speakGerman } from '../utils/speech';
 import confetti from 'canvas-confetti';
@@ -20,15 +20,14 @@ interface FloatingFood {
   xPercent: number;
   yPercent: number;
   delay: string;
-  scale: number;
 }
 
 const ORBITING_FOODS: FloatingFood[] = [
-  { id: 'brezel', name: 'Brezel', article: 'die', emoji: '🥨', xPercent: 6, yPercent: 20, delay: '0s', scale: 1.15 },
-  { id: 'schnitzel', name: 'Schnitzel', article: 'das', emoji: '🥩', xPercent: 90, yPercent: 18, delay: '0.6s', scale: 1.2 },
-  { id: 'bier', name: 'Weizenbier', article: 'das', emoji: '🍺', xPercent: 92, yPercent: 62, delay: '1.2s', scale: 1.1 },
-  { id: 'broetchen', name: 'Brötchen', article: 'das', emoji: '🥖', xPercent: 5, yPercent: 65, delay: '1.8s', scale: 1.05 },
-  { id: 'torte', name: 'Kirschtorte', article: 'die', emoji: '🍰', xPercent: 50, yPercent: 4, delay: '2.4s', scale: 1.0 },
+  { id: 'brezel', name: 'Brezel', article: 'die', emoji: '🥨', xPercent: 10, yPercent: 22, delay: '0s' },
+  { id: 'schnitzel', name: 'Schnitzel', article: 'das', emoji: '🥩', xPercent: 88, yPercent: 20, delay: '0.6s' },
+  { id: 'bier', name: 'Weizenbier', article: 'das', emoji: '🍺', xPercent: 86, yPercent: 62, delay: '1.2s' },
+  { id: 'broetchen', name: 'Brötchen', article: 'das', emoji: '🥖', xPercent: 12, yPercent: 65, delay: '1.8s' },
+  { id: 'torte', name: 'Kirschtorte', article: 'die', emoji: '🍰', xPercent: 50, yPercent: 6, delay: '2.4s' },
 ];
 
 export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
@@ -92,14 +91,14 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
     const particles: Particle[] = [];
     const colors = ['#f59e0b', '#ef4444', '#fbbf24', '#ffffff', '#eab308'];
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 40; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: -Math.random() * 1.4 - 0.3,
-        size: Math.random() * 4 + 1.5,
-        alpha: Math.random() * 0.6 + 0.2,
+        vx: (Math.random() - 0.5) * 0.7,
+        vy: -Math.random() * 1.2 - 0.2,
+        size: Math.random() * 3 + 1,
+        alpha: Math.random() * 0.5 + 0.2,
         color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
@@ -117,9 +116,9 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      const gradient = ctx.createRadialGradient(cursorX, cursorY, 10, cursorX, cursorY, 320);
-      gradient.addColorStop(0, 'rgba(245, 158, 11, 0.15)');
-      gradient.addColorStop(0.5, 'rgba(239, 68, 68, 0.06)');
+      const gradient = ctx.createRadialGradient(cursorX, cursorY, 10, cursorX, cursorY, 300);
+      gradient.addColorStop(0, 'rgba(245, 158, 11, 0.12)');
+      gradient.addColorStop(0.5, 'rgba(239, 68, 68, 0.05)');
       gradient.addColorStop(1, 'transparent');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
@@ -130,16 +129,16 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         const dx = p.x - cursorX;
         const dy = p.y - cursorY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          const force = (130 - dist) / 130;
-          p.vx += (dx / dist) * force * 1.6;
-          p.vy += (dy / dist) * force * 1.6;
+        if (dist < 110) {
+          const force = (110 - dist) / 110;
+          p.vx += (dx / dist) * force * 1.4;
+          p.vy += (dy / dist) * force * 1.4;
         }
 
         p.x += p.vx;
         p.y += p.vy;
         p.vx *= 0.98;
-        p.vy = p.vy * 0.98 - 0.02;
+        p.vy = p.vy * 0.98 - 0.015;
 
         if (p.y < -10) {
           p.y = height + 10;
@@ -152,7 +151,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.alpha;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 10;
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -184,9 +183,9 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
     sound.playSuccess();
     try {
       confetti({
-        particleCount: 65,
-        spread: 90,
-        origin: { y: 0.45 },
+        particleCount: 55,
+        spread: 80,
+        origin: { y: 0.5 },
         colors: ['#000000', '#DD0000', '#FFCC00'],
       });
     } catch {
@@ -212,22 +211,22 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
   const getSkyStyle = () => {
     if (timeHour < 10) {
-      return 'from-amber-600/35 via-orange-600/20 to-stone-950';
+      return 'from-amber-600/30 via-orange-600/15 to-stone-950';
     } else if (timeHour < 15) {
-      return 'from-yellow-500/30 via-red-600/20 to-stone-950';
+      return 'from-amber-500/20 via-red-600/15 to-stone-950';
     } else if (timeHour < 18) {
-      return 'from-amber-700/35 via-stone-850 to-stone-950';
+      return 'from-amber-700/25 via-stone-900 to-stone-950';
     } else {
-      return 'from-indigo-950/60 via-purple-950/40 to-stone-950';
+      return 'from-indigo-950/40 via-purple-950/20 to-stone-950';
     }
   };
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full min-h-[92vh] flex flex-col justify-between border-b-2 border-stone-800 bg-gradient-to-b ${getSkyStyle()} px-4 sm:px-8 xl:px-14 py-8 xl:py-12 overflow-hidden shadow-2xl transition-all duration-700 select-none group poster-grain`}
+      className={`relative w-full min-h-[calc(100vh-80px)] flex flex-col justify-between border-b border-stone-800 bg-gradient-to-b ${getSkyStyle()} px-4 sm:px-8 xl:px-16 py-8 sm:py-12 overflow-hidden shadow-2xl transition-all duration-700 select-none group poster-grain`}
     >
-      {/* Background Interactive Fluid Canvas spanning full viewport */}
+      {/* Background Interactive Fluid Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
@@ -244,20 +243,20 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
             <span className="h-1.5 bg-amber-400 w-full" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-[0.3em] font-black text-amber-300 block">
+            <span className="text-xs font-mono uppercase tracking-[0.3em] font-extrabold text-amber-300 block">
               BUNDESREPUBLIK DEUTSCHLAND
             </span>
             <span className="text-[11px] text-stone-400">
-              Offizielles Kulinarisches Großformat-Plakat
+              {lang === 'de' ? 'Offizielles Interaktives Bildungsplakat' : 'Official Interactive Educational Poster'}
             </span>
           </div>
         </div>
 
         {/* Dynamic Sun/Moon Time Arc Controller */}
-        <div className="flex items-center gap-4 bg-stone-900/90 px-5 py-2 rounded-full border border-stone-700 shadow-xl">
-          <span className="text-xs font-mono text-stone-300 flex items-center gap-2">
-            {timeHour < 18 ? <Sun className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '20s' }} /> : <Moon className="w-4 h-4 text-indigo-300" />}
-            <span className="font-bold text-white text-sm">{String(timeHour).padStart(2, '0')}:00 Uhr</span>
+        <div className="flex items-center gap-4 bg-stone-900/90 px-4 py-1.5 rounded-full border border-stone-700/80 shadow-lg">
+          <span className="text-xs font-mono text-stone-300 flex items-center gap-1.5">
+            {timeHour < 18 ? <Sun className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '20s' }} /> : <Moon className="w-3.5 h-3.5 text-indigo-300" />}
+            <span className="font-bold text-white">{String(timeHour).padStart(2, '0')}:00 Uhr</span>
           </span>
 
           <input
@@ -269,39 +268,39 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
               sound.playClick();
               setTimeHour(parseInt(e.target.value, 10));
             }}
-            className="w-32 sm:w-48 h-2 bg-stone-700 rounded-lg appearance-none cursor-pointer accent-amber-400"
+            className="w-28 sm:w-40 h-1.5 bg-stone-700 rounded-lg appearance-none cursor-pointer accent-amber-400"
             title="Tageszeit regeln"
           />
 
-          <span className="text-xs font-black uppercase tracking-wider text-amber-400 hidden sm:inline-block">
-            {selectedMeal === 'fruehstueck' && '🌅 Frühstück'}
-            {selectedMeal === 'mittagessen' && '☀️ Mittagessen'}
-            {selectedMeal === 'kaffee' && '☕ Kaffee & Kuchen'}
-            {selectedMeal === 'abendbrot' && '🌙 Abendbrot'}
+          <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 hidden sm:inline-block">
+            {selectedMeal === 'fruehstueck' && 'Frühstück'}
+            {selectedMeal === 'mittagessen' && 'Mittag'}
+            {selectedMeal === 'kaffee' && 'Kaffee'}
+            {selectedMeal === 'abendbrot' && 'Abendbrot'}
           </span>
         </div>
 
       </div>
 
-      {/* Floating Interactive 3D Satellites spanning across wide screen */}
+      {/* Floating Interactive 3D Satellites (Naturally placed with tasteful proportions) */}
       {ORBITING_FOODS.map((food) => (
         <div
           key={food.id}
           onClick={() => handleFoodClick(food)}
           style={{
             left: `${food.xPercent}%`,
-            top: `${food.yPercent + 12}%`,
+            top: `${food.yPercent}%`,
             animationDelay: food.delay,
           }}
-          className="absolute z-20 hidden md:flex flex-col items-center cursor-pointer group/orb animate-float hover:scale-125 transition-transform duration-300"
+          className="absolute z-20 hidden lg:flex flex-col items-center cursor-pointer group/orb animate-float hover:scale-125 transition-transform duration-300"
         >
-          <div className="w-14 h-14 rounded-2xl bg-stone-900/90 border-2 border-stone-700 backdrop-blur-md shadow-2xl flex items-center justify-center text-3xl group-hover/orb:border-amber-400 group-hover/orb:ring-4 group-hover/orb:ring-amber-400/30 transition-all">
+          <div className="w-12 h-12 rounded-2xl bg-stone-900/90 border border-stone-700 backdrop-blur-md shadow-xl flex items-center justify-center text-2xl group-hover/orb:border-amber-400 group-hover/orb:ring-2 group-hover/orb:ring-amber-400/30 transition-all">
             <span className="transform group-hover/orb:rotate-12 transition-transform">
               {food.emoji}
             </span>
           </div>
 
-          <span className="mt-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-stone-950/95 text-stone-200 border border-stone-700 shadow-xl opacity-0 group-hover/orb:opacity-100 transition-opacity whitespace-nowrap">
+          <span className="mt-1 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-stone-950/95 text-stone-200 border border-stone-700 shadow-lg opacity-0 group-hover/orb:opacity-100 transition-opacity whitespace-nowrap">
             {food.article.toUpperCase()} {food.name}
           </span>
         </div>
@@ -309,20 +308,20 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
       {/* Active Food Tooltip Popup when clicked */}
       {activeFood && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 px-6 py-3 rounded-2xl bg-amber-400 text-stone-950 font-black text-base shadow-2xl flex items-center gap-3 animate-bounce">
-          <span className="text-2xl">{activeFood.emoji}</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 px-5 py-2.5 rounded-2xl bg-amber-400 text-stone-950 font-black text-sm shadow-2xl flex items-center gap-2 animate-bounce">
+          <span className="text-xl">{activeFood.emoji}</span>
           <span>{activeFood.article.toUpperCase()} {activeFood.name}!</span>
         </div>
       )}
 
-      {/* MASSIVE CENTRAL KINETIC TYPOGRAPHY (Stretching edge-to-edge) */}
+      {/* ELEGANT TYPOGRAPHIC POSTER HEADLINE (Preserving the main aesthetic!) */}
       <div 
         onClick={handleTitleClick}
-        className="relative z-10 text-center py-6 sm:py-10 space-y-4 cursor-pointer my-auto"
+        className="relative z-10 text-center py-6 sm:py-10 space-y-4 cursor-pointer my-auto max-w-5xl mx-auto"
       >
         
         {/* Kinetic Word 1: KULINARISCHES / CULINARY */}
-        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 md:gap-3 xl:gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
           {word1.split('').map((char, idx) => {
             const isHovered = hoveredLetter === idx;
             return (
@@ -330,10 +329,10 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                 key={idx}
                 onMouseEnter={() => handleLetterHover(idx)}
                 onMouseLeave={() => setHoveredLetter(null)}
-                className={`font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] tracking-tighter inline-block transition-all duration-200 transform leading-none ${
+                className={`font-display font-black text-5xl sm:text-7xl md:text-8xl tracking-tight inline-block transition-all duration-200 transform leading-none ${
                   isHovered
-                    ? 'text-amber-300 -translate-y-4 scale-125 rotate-3 drop-shadow-[0_20px_35px_rgba(245,158,11,0.7)] z-20'
-                    : 'text-white hover:text-amber-200 drop-shadow-lg'
+                    ? 'text-amber-300 -translate-y-3 scale-125 rotate-3 drop-shadow-[0_15px_25px_rgba(245,158,11,0.6)] z-20'
+                    : 'text-white hover:text-amber-200 drop-shadow-md'
                 }`}
               >
                 {char}
@@ -343,7 +342,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         </div>
 
         {/* Kinetic Word 2: DEUTSCHLAND / GERMANY */}
-        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 md:gap-3 xl:gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
           {word2.split('').map((char, idx) => {
             const letterGlobalIndex = word1.length + idx;
             const isHovered = hoveredLetter === letterGlobalIndex;
@@ -352,30 +351,30 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                 key={idx}
                 onMouseEnter={() => handleLetterHover(letterGlobalIndex)}
                 onMouseLeave={() => setHoveredLetter(null)}
-                className={`font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] tracking-tighter inline-block transition-all duration-200 transform leading-none ${
+                className={`font-display font-black text-5xl sm:text-7xl md:text-8xl tracking-tight inline-block transition-all duration-200 transform leading-none ${
                   isHovered
-                    ? 'text-red-400 -translate-y-4 scale-125 -rotate-3 drop-shadow-[0_20px_35px_rgba(239,68,68,0.8)] z-20'
-                    : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-red-500 to-amber-200 drop-shadow-lg'
+                    ? 'text-red-400 -translate-y-3 scale-125 -rotate-3 drop-shadow-[0_15px_25px_rgba(239,68,68,0.7)] z-20'
+                    : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-red-500 to-amber-200 drop-shadow-md'
                 }`}
               >
                 {char}
               </span>
             );
           })}
-          <span className="font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] text-amber-400 animate-pulse leading-none">
+          <span className="font-display font-black text-5xl sm:text-7xl md:text-8xl text-amber-400 animate-pulse leading-none">
             .
           </span>
         </div>
 
         {/* Phonetic & Audio Pronunciation Button Bar */}
-        <div className="pt-3 flex flex-wrap items-center justify-center gap-4">
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={handleSpeakTitle}
             disabled={isSpeakingTitle}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-2xl font-bold text-xs sm:text-sm shadow-2xl transition-all duration-300 ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs shadow-xl transition-all duration-300 ${
               isSpeakingTitle
                 ? 'bg-amber-500 text-stone-950 scale-105 ring-4 ring-amber-400/40'
-                : 'bg-stone-900/90 hover:bg-amber-400 text-amber-300 hover:text-stone-950 border border-amber-400/50 hover:scale-105'
+                : 'bg-stone-900/90 hover:bg-amber-400 text-amber-300 hover:text-stone-950 border border-amber-400/40 hover:scale-105'
             }`}
           >
             <Volume2 className={`w-4 h-4 ${isSpeakingTitle ? 'animate-bounce' : ''}`} />
@@ -386,13 +385,13 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
             </span>
           </button>
 
-          <span className="px-4 py-2 rounded-2xl bg-stone-900/80 border border-stone-800 text-xs sm:text-sm font-serif italic text-stone-300">
-            {lang === 'de' ? '✨ Fahre mit der Maus über die Buchstaben für Harfen-Töne!' : '✨ Hover letters to play musical notes!'}
+          <span className="px-3.5 py-1.5 rounded-xl bg-stone-900/70 border border-stone-800 text-xs font-serif italic text-stone-300">
+            {lang === 'de' ? '✨ Berühre die Buchstaben für Harfen-Töne!' : '✨ Hover letters to play notes!'}
           </span>
         </div>
 
         {/* Subtitle description */}
-        <p className="font-serif italic text-xl sm:text-3xl text-stone-200 max-w-4xl mx-auto pt-2 leading-relaxed">
+        <p className="font-serif italic text-lg sm:text-2xl text-stone-300 max-w-3xl mx-auto pt-2 leading-relaxed">
           {lang === 'de' 
             ? 'Vom ofenfrischen Frühstück über das herzhafte Mittagessen bis zum gemütlichen Abendbrot.' 
             : 'From oven-fresh morning breakfast to hearty lunch and cozy evening supper.'}
@@ -401,7 +400,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
       </div>
 
       {/* Bottom Live Interactive Meal Indicators spanning full width */}
-      <div className="relative z-10 pt-6 border-t border-stone-800/80 grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+      <div className="relative z-10 pt-6 border-t border-stone-800/80 grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
         {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal) => {
           const isCurrent = selectedMeal === meal;
           return (
@@ -411,27 +410,27 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                 sound.playClick();
                 setSelectedMeal(meal);
               }}
-              className={`p-4 rounded-3xl border text-left transition-all ${
+              className={`p-3.5 rounded-2xl border text-left transition-all ${
                 isCurrent
-                  ? 'bg-amber-400 text-stone-950 border-amber-300 font-bold shadow-2xl shadow-amber-400/30 scale-[1.02]'
-                  : 'bg-stone-950/80 text-stone-400 border-stone-800 hover:text-white hover:bg-stone-900'
+                  ? 'bg-amber-400 text-stone-950 border-amber-300 font-bold shadow-xl shadow-amber-400/20 scale-[1.02]'
+                  : 'bg-stone-950/70 text-stone-400 border-stone-800 hover:text-white hover:bg-stone-900'
               }`}
             >
-              <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="uppercase text-[11px] font-black tracking-wider opacity-85">
-                  {meal === 'fruehstueck' && '06:30 - 10:00 Uhr'}
-                  {meal === 'mittagessen' && '12:00 - 14:00 Uhr'}
-                  {meal === 'kaffee' && '15:00 - 17:00 Uhr'}
-                  {meal === 'abendbrot' && '18:30 - 20:30 Uhr'}
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="uppercase text-[10px] font-black tracking-wider opacity-80">
+                  {meal === 'fruehstueck' && '06:30 - 10:00'}
+                  {meal === 'mittagessen' && '12:00 - 14:00'}
+                  {meal === 'kaffee' && '15:00 - 17:00'}
+                  {meal === 'abendbrot' && '18:30 - 20:30'}
                 </span>
-                <span className="text-2xl">
+                <span className="text-xl">
                   {meal === 'fruehstueck' && '🥐'}
                   {meal === 'mittagessen' && '🥩'}
                   {meal === 'kaffee' && '🍰'}
                   {meal === 'abendbrot' && '🥖'}
                 </span>
               </div>
-              <span className="font-display font-extrabold text-base sm:text-lg block truncate">
+              <span className="font-display font-extrabold text-sm sm:text-base block truncate">
                 {meal === 'fruehstueck' && (lang === 'de' ? 'Das Frühstück' : 'Breakfast')}
                 {meal === 'mittagessen' && (lang === 'de' ? 'Das Mittagessen' : 'Lunch')}
                 {meal === 'kaffee' && (lang === 'de' ? 'Kaffee & Kuchen' : 'Afternoon Coffee')}
