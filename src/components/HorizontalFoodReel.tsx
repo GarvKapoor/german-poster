@@ -61,7 +61,7 @@ export const HorizontalFoodReel: React.FC<HorizontalFoodReelProps> = ({
             {lang === 'de' ? 'Das Große Kulinarik-Karussell' : 'The Great German Culinary Reel'}
           </h2>
           <p className="font-serif italic text-stone-400 text-sm mt-0.5">
-            {lang === 'de' ? 'Läuft automatisch von selbst. Bewege die Maus darüber, um anzuhalten.' : 'Scrolls on its own horizontally. Hover any card to pause.'}
+            {lang === 'de' ? '18 ikonische Spezialitäten im kontinuierlichen Laufband.' : '18 iconic specialties in a continuous showcase.'}
           </p>
         </div>
 

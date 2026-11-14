@@ -91,7 +91,7 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
   };
 
   return (
-    <section id="teller" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-900/40 relative overflow-hidden">
+    <section id="teller" className="w-full py-12 sm:py-14 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-900/40 relative overflow-hidden">
       
       {/* Header */}
       <motion.div
@@ -99,7 +99,7 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.15 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-800 pb-6 mb-10"
+        className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-800 pb-6 mb-8"
       >
         <div>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
@@ -109,8 +109,8 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
           <h2 className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight">
             {lang === 'de' ? 'Stell deinen deutschen Teller zusammen' : 'Build Your German Feast'}
           </h2>
-          <p className="font-serif italic text-stone-300 text-base sm:text-lg mt-1">
-            {lang === 'de' ? 'Wähle deine Lieblingskomponenten und lerne, das Gericht auf Deutsch im Akkusativ zu bestellen!' : 'Compose your favorite dishes and practice ordering in German!'}
+          <p className="font-serif italic text-stone-300 text-sm sm:text-base mt-1">
+            {lang === 'de' ? 'Komponiere dein Menü und bestelle es auf Deutsch im Akkusativ.' : 'Compose your menu and order it in German in the accusative case.'}
           </p>
         </div>
 

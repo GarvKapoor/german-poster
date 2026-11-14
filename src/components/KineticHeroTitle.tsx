@@ -256,7 +256,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
       {/* ELEGANT TYPOGRAPHIC POSTER HEADLINE */}
       <div 
         onClick={handleTitleClick}
-        className="relative z-10 text-center py-6 sm:py-10 space-y-4 cursor-pointer my-auto max-w-5xl mx-auto"
+        className="relative z-10 text-center py-4 sm:py-8 space-y-3 cursor-pointer my-auto max-w-5xl mx-auto"
       >
         
         {/* Kinetic Word 1: KULINARISCHES / CULINARY */}
@@ -318,43 +318,39 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
 
         {/* Phonetic & Audio Pronunciation Button Bar */}
         <motion.div 
-          initial={{ y: 25, opacity: 0 }}
+          initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.95, ease: 'easeOut' }}
-          className="pt-2 flex flex-wrap items-center justify-center gap-3"
+          transition={{ duration: 0.5, delay: 0.9, ease: 'easeOut' }}
+          className="pt-1 flex flex-wrap items-center justify-center gap-3"
         >
           <button
             onClick={handleSpeakTitle}
             disabled={isSpeakingTitle}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs shadow-xl transition-all duration-300 ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs shadow-md transition-all duration-300 ${
               isSpeakingTitle
                 ? 'bg-amber-500 text-stone-950 scale-105 ring-4 ring-amber-400/40'
                 : 'bg-stone-900/90 hover:bg-amber-400 text-amber-300 hover:text-stone-950 border border-amber-400/40 hover:scale-105'
             }`}
           >
-            <Volume2 className={`w-4 h-4 ${isSpeakingTitle ? 'animate-bounce' : ''}`} />
+            <Volume2 className={`w-3.5 h-3.5 ${isSpeakingTitle ? 'animate-bounce' : ''}`} />
             <span>
               {isSpeakingTitle
                 ? (lang === 'de' ? 'Sprachausgabe aktiv...' : 'Speaking...')
                 : (lang === 'de' ? '🔊 [ku-li-ˈnaː-ʁɪ-ʃəs ˈdɔʏ̯tʃ-lant]' : '🔊 Speak Title in German')}
             </span>
           </button>
-
-          <span className="px-3.5 py-1.5 rounded-xl bg-stone-900/70 border border-stone-800 text-xs font-serif italic text-stone-300">
-            {lang === 'de' ? '✨ Berühre die Buchstaben für Harfen-Töne!' : '✨ Hover letters to play notes!'}
-          </span>
         </motion.div>
 
-        {/* Subtitle description */}
+        {/* Minimalist Subtitle */}
         <motion.p 
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.1, ease: 'easeOut' }}
-          className="font-serif italic text-lg sm:text-2xl text-stone-300 max-w-3xl mx-auto pt-2 leading-relaxed"
+          transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
+          className="font-serif italic text-base sm:text-lg text-stone-300 max-w-2xl mx-auto pt-1 leading-snug"
         >
           {lang === 'de' 
-            ? 'Vom ofenfrischen Frühstück über das herzhafte Mittagessen bis zum gemütlichen Abendbrot.' 
-            : 'From oven-fresh morning breakfast to hearty lunch and cozy evening supper.'}
+            ? 'Vom Frühstück bis zum Abendbrot: Eine interaktive Reise durch die deutsche Küche.' 
+            : 'From breakfast to supper: An interactive journey through German culinary tradition.'}
         </motion.p>
 
       </div>
@@ -433,9 +429,9 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
               sound.playClick();
               document.getElementById('details-card')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-stone-900/90 hover:bg-amber-400 text-stone-300 hover:text-stone-950 border border-stone-700/80 hover:border-amber-400 text-xs font-bold transition-all shadow-lg hover:scale-105 group/btn"
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-stone-900/90 hover:bg-amber-400 text-stone-300 hover:text-stone-950 border border-stone-700/80 hover:border-amber-400 text-xs font-bold transition-all shadow-md hover:scale-105 group/btn"
           >
-            <span>{lang === 'de' ? 'Zum 3D-Ausstellungsplakat vorblättern' : 'Explore 3D Poster Details'}</span>
+            <span>{lang === 'de' ? 'Kultur-Details erkunden' : 'Explore Cultural Details'}</span>
             <span className="text-amber-400 group-hover/btn:text-stone-950 transition-colors">↓</span>
           </button>
         </motion.div>

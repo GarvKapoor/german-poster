@@ -53,7 +53,7 @@ export const MealPanoramicStrip: React.FC<MealPanoramicStripProps> = ({
             {lang === 'de' ? 'Vier Mahlzeiten im Tageslauf' : 'Four Meals of the German Day'}
           </h2>
           <p className="font-serif italic text-stone-400 text-sm sm:text-base mt-1">
-            {lang === 'de' ? 'Vom Frühstück bis zum Abendbrot – bewege die Maus über die Spalten für Details.' : 'From morning breakfast to evening supper – expand each column to explore.'}
+            {lang === 'de' ? 'Vier kulinarische Kapitel eines traditionellen deutschen Tages.' : 'Four culinary chapters of a traditional German day.'}
           </p>
         </div>
 
@@ -142,33 +142,26 @@ export const MealPanoramicStrip: React.FC<MealPanoramicStripProps> = ({
                 </p>
               </div>
 
-              {/* Bottom: Featured Dishes preview inside column */}
-              <div className="relative z-10 space-y-2 pt-4 border-t border-stone-800/80">
+              {/* Bottom: Iconic Dishes Chip Badges */}
+              <div className="relative z-10 pt-4 border-t border-stone-800/80 space-y-2">
                 <span className="text-[10px] font-black uppercase tracking-wider text-stone-400 block">
-                  {lang === 'de' ? 'Typische Speisen:' : 'Iconic Dishes:'}
+                  {lang === 'de' ? 'Klassiker:' : 'Classics:'}
                 </span>
 
-                <div className="space-y-1.5">
+                <div className="flex flex-wrap gap-1.5">
                   {mealDishes.map((dish) => (
-                    <div
+                    <button
                       key={dish.id}
                       onClick={(e) => {
                         e.stopPropagation();
                         sound.playClick();
                         onSelectFood(dish);
                       }}
-                      className="p-2 rounded-xl bg-stone-950/70 border border-stone-800/80 hover:border-amber-400/50 flex items-center justify-between text-xs transition-colors group/item"
+                      className="px-2.5 py-1 rounded-lg bg-stone-950/80 border border-stone-800 hover:border-amber-400/50 text-[11px] font-medium text-stone-300 hover:text-amber-300 flex items-center gap-1.5 transition-colors group/item"
                     >
-                      <div className="flex items-center gap-2 truncate">
-                        <span>{dish.emoji}</span>
-                        <span className="truncate font-semibold text-stone-300 group-hover/item:text-amber-300">
-                          {dish.article.toUpperCase()} {dish.name}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono text-stone-500 shrink-0">
-                        {dish.calories} kcal
-                      </span>
-                    </div>
+                      <span>{dish.emoji}</span>
+                      <span className="truncate max-w-[130px]">{dish.name}</span>
+                    </button>
                   ))}
                 </div>
               </div>

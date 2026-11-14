@@ -98,7 +98,7 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
           transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transition: 'transform 0.15s ease-out',
         }}
-        className="relative w-full min-h-[calc(100vh-80px)] flex flex-col justify-between border-b border-stone-800 bg-stone-900/95 px-4 sm:px-8 xl:px-16 py-8 sm:py-12 shadow-2xl poster-grain transition-shadow duration-300 overflow-hidden"
+        className="relative w-full border-b border-stone-800 bg-stone-900/95 px-4 sm:px-8 xl:px-16 py-10 sm:py-14 shadow-2xl poster-grain transition-shadow duration-300 overflow-hidden"
       >
         {/* Dynamic Glare Reflection Overlay */}
         <div
@@ -142,85 +142,66 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: false }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 space-y-5"
+            className="lg:col-span-7 space-y-4"
           >
             
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>{lang === 'de' ? 'Kulturelle Esskultur & Alltag' : 'Cultural Food Tradition'}</span>
+              <span>{lang === 'de' ? 'Kulturelle Esskultur' : 'Cultural Food Tradition'}</span>
             </div>
 
             <div className="space-y-1">
               <h2 className="font-display font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
                 {lang === 'de' ? 'Die vier Säulen der deutschen Küche' : 'The Four Pillars of German Culinary Life'}
               </h2>
-              <p className="font-serif italic text-amber-300 text-lg sm:text-xl pt-0.5">
+              <p className="font-serif italic text-amber-300 text-base sm:text-lg pt-0.5">
                 {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn}
               </p>
             </div>
 
-            <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-xl">
-              {lang === 'de' ? (
-                <>
-                  Entdecke die faszinierende Vielfalt der deutschen Küche: Von ofenfrischen 
-                  <strong className="text-amber-300 font-semibold"> Brötchen</strong> am Morgen, herzhaften 
-                  <strong className="text-red-400 font-semibold"> Schnitzeln</strong> und 
-                  <strong className="text-amber-300 font-semibold"> Käsespätzle</strong> zur Mittagszeit, über 
-                  süße <strong className="text-amber-300 font-semibold">Schwarzwälder Kirschtorte</strong> bis 
-                  zur traditionsreichen <strong className="text-indigo-300 font-semibold">Abendbrot-Kultur</strong>.
-                </>
-              ) : (
-                <>
-                  Explore the captivating richness of German food culture: From warm crusty 
-                  <strong className="text-amber-300 font-semibold"> Brötchen</strong> in the morning, hearty 
-                  <strong className="text-red-400 font-semibold"> Schnitzel</strong> and 
-                  <strong className="text-amber-300 font-semibold"> Käsespätzle</strong> at noon, to sweet 
-                  <strong className="text-amber-300 font-semibold"> Black Forest Cake</strong> and 
-                  traditional cold-cut <strong className="text-indigo-300 font-semibold">Abendbrot</strong>.
-                </>
-              )}
+            <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-lg">
+              {lang === 'de' 
+                ? 'Von ofenfrischem Brot am Morgen bis zur traditionellen Abendbrot-Tafel.' 
+                : 'From warm oven-fresh morning bread to the iconic evening supper table.'}
             </p>
 
             {/* Interactive Audio & Action Buttons */}
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-1 flex flex-wrap items-center gap-3">
               <button
                 onClick={handleHeroSpeech}
                 disabled={isSpeaking}
-                className={`flex items-center gap-2.5 px-6 py-3.5 rounded-2xl font-bold text-xs sm:text-sm transition-all duration-300 shadow-xl ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-md ${
                   isSpeaking
                     ? 'bg-amber-500 text-stone-950 scale-105 ring-4 ring-amber-400/40'
-                    : 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 shadow-amber-500/25 hover:scale-105'
+                    : 'bg-stone-950 hover:bg-amber-400 text-amber-300 hover:text-stone-950 border border-amber-400/40 hover:scale-105'
                 }`}
               >
                 <Volume2 className={`w-4 h-4 ${isSpeaking ? 'animate-bounce' : ''}`} />
-                <span>{isSpeaking ? (lang === 'de' ? 'Spricht Deutsch...' : 'Speaking German...') : (lang === 'de' ? 'Audio-Einführung anhören' : 'Listen to Audio Tour')}</span>
+                <span>{isSpeaking ? (lang === 'de' ? 'Spricht...' : 'Speaking...') : (lang === 'de' ? 'Audio anhören' : 'Listen')}</span>
               </button>
 
               <button
                 onClick={() => scrollToSection('panorama')}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 text-xs sm:text-sm font-bold transition-all shadow-lg hover:scale-105"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 text-xs sm:text-sm font-bold transition-all shadow-md hover:scale-105"
               >
-                <span>{lang === 'de' ? 'Weiter zum Tageszeiten-Panorama' : 'Explore Day Horizon'}</span>
+                <span>{lang === 'de' ? 'Tageszeiten-Panorama' : 'Explore Day Horizon'}</span>
                 <span>↓</span>
               </button>
             </div>
 
-            {/* Educational Badges: Der / Die / Das */}
-            <div className="pt-3 grid grid-cols-3 gap-3 border-t border-stone-800">
-              <div className="p-3.5 rounded-2xl bg-stone-950/80 border border-blue-500/35">
-                <span className="text-[10px] font-black uppercase text-blue-400 block tracking-wider">Maskulin</span>
-                <span className="text-base font-black text-white">DER</span>
-                <span className="text-[11px] text-stone-400 block truncate mt-0.5">Kaffee, Sauerbraten, Salat</span>
+            {/* Sleek Educational Grammatical Ribbon: Der / Die / Das */}
+            <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs font-mono">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-950/90 border border-blue-500/40 text-blue-300">
+                <span className="font-black text-white bg-blue-600 px-1.5 py-0.5 rounded text-[10px]">DER</span>
+                <span className="text-stone-300">Kaffee • Sauerbraten</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-stone-950/80 border border-red-500/35">
-                <span className="text-[10px] font-black uppercase text-red-400 block tracking-wider">Feminin</span>
-                <span className="text-base font-black text-white">DIE</span>
-                <span className="text-[11px] text-stone-400 block truncate mt-0.5">Bratwurst, Brezel, Torte</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-950/90 border border-red-500/40 text-red-300">
+                <span className="font-black text-white bg-red-600 px-1.5 py-0.5 rounded text-[10px]">DIE</span>
+                <span className="text-stone-300">Bratwurst • Brezel</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-stone-950/80 border border-green-500/35">
-                <span className="text-[10px] font-black uppercase text-green-400 block tracking-wider">Neutrum</span>
-                <span className="text-base font-black text-white">DAS</span>
-                <span className="text-[11px] text-stone-400 block truncate mt-0.5">Brötchen, Schnitzel, Bier</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-950/90 border border-emerald-500/40 text-emerald-300">
+                <span className="font-black text-white bg-emerald-600 px-1.5 py-0.5 rounded text-[10px]">DAS</span>
+                <span className="text-stone-300">Brötchen • Schnitzel</span>
               </div>
             </div>
 

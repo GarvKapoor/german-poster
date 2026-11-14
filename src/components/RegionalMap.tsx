@@ -25,7 +25,7 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
   };
 
   return (
-    <section id="landkarte" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-950 relative overflow-hidden">
+    <section id="landkarte" className="w-full py-12 sm:py-14 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-950 relative overflow-hidden">
       
       {/* Section Header */}
       <motion.div
@@ -33,7 +33,7 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.15 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="border-b border-stone-800 pb-6 mb-10"
+        className="border-b border-stone-800 pb-6 mb-8"
       >
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
           <Compass className="w-4 h-4" />
@@ -42,8 +42,8 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
         <h2 className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight">
           {lang === 'de' ? 'Regionale Spezialitäten Deutschlands' : 'Regional Specialties of Germany'}
         </h2>
-        <p className="font-serif italic text-stone-300 text-base sm:text-lg mt-1">
-          {lang === 'de' ? 'Klicke auf die Bundesländer auf der Landkarte, um die typischen Traditionsgerichte zu entdecken.' : 'Click on any German state on the map to discover its signature culinary traditions.'}
+        <p className="font-serif italic text-stone-300 text-sm sm:text-base mt-1">
+          {lang === 'de' ? '16 Bundesländer und ihre unverwechselbaren Spezialitäten.' : '16 federal states and their distinctive local specialties.'}
         </p>
       </motion.div>
 

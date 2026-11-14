@@ -115,19 +115,20 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
       </motion.div>
 
       {/* Grammar Color Legend reminder across full width */}
-      <div className="w-full p-4 rounded-3xl bg-stone-900/60 border border-stone-800 flex flex-wrap items-center justify-between gap-4 text-xs">
-        <span className="text-stone-300 font-medium">
-          💡 <strong>Grammatik-Tipp:</strong> {lang === 'de' ? 'Im Deutschen haben alle Lebensmittel ein grammatikalisches Geschlecht (Genus):' : 'German food nouns always carry one of three genders:'}
+      <div className="w-full px-4 py-3 rounded-2xl bg-stone-900/60 border border-stone-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <span className="text-stone-300 font-medium flex items-center gap-1.5">
+          <span>💡</span>
+          <strong>Grammatik-Genus:</strong> {lang === 'de' ? 'Lebensmittelartikel im Deutschen' : 'German food noun genders'}
         </span>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <span className="px-3 py-1 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold">
-            DER (Maskulin)
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold text-[11px]">
+            DER • Maskulin
           </span>
-          <span className="px-3 py-1 rounded-xl bg-red-500/20 text-red-300 border border-red-500/40 font-bold">
-            DIE (Feminin)
+          <span className="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 border border-red-500/40 font-bold text-[11px]">
+            DIE • Feminin
           </span>
-          <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
-            DAS (Neutrum)
+          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-[11px]">
+            DAS • Neutrum
           </span>
         </div>
       </div>
@@ -235,23 +236,15 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
                   {lang === 'de' ? item.descriptionDe : item.descriptionEn}
                 </p>
 
-                {/* Conversational Sample Phrase */}
+                {/* Conversational Sample Phrase with Audio */}
                 <div 
                   onClick={(e) => handleSentencePronounce(e, item.sampleSentenceDe)}
-                  className="p-3 rounded-2xl bg-stone-950/70 border border-stone-800 hover:border-amber-400/40 transition-colors flex items-center justify-between gap-3 group/phrase"
+                  className="px-3 py-2 rounded-xl bg-stone-950/70 border border-stone-800 hover:border-amber-400/40 transition-colors flex items-center justify-between gap-2 group/phrase"
                 >
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400/80 block">
-                      {lang === 'de' ? 'Praxis-Satz (Bestellen):' : 'Speaking Practice:'}
-                    </span>
-                    <p className="text-xs font-medium text-stone-200 group-hover/phrase:text-white transition-colors">
-                      „{item.sampleSentenceDe}“
-                    </p>
-                    <p className="text-[11px] text-stone-400 italic">
-                      {item.sampleSentenceEn}
-                    </p>
-                  </div>
-                  <div className="p-2 rounded-xl bg-stone-900 text-amber-400 group-hover/phrase:bg-amber-400 group-hover/phrase:text-stone-950 transition-colors shrink-0">
+                  <p className="text-xs font-medium text-stone-200 truncate group-hover/phrase:text-white transition-colors">
+                    „{item.sampleSentenceDe}“
+                  </p>
+                  <div className="p-1.5 rounded-lg bg-stone-900 text-amber-400 group-hover/phrase:bg-amber-400 group-hover/phrase:text-stone-950 transition-colors shrink-0">
                     <Volume2 className="w-3.5 h-3.5" />
                   </div>
                 </div>
