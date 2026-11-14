@@ -216,29 +216,6 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
       />
 
-      {/* Top Banner Status */}
-      <div className="relative z-10 w-full flex items-center justify-between border-b border-stone-800/80 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col gap-0.5 w-5 h-4 rounded overflow-hidden shadow">
-            <span className="h-1.5 bg-stone-950 w-full" />
-            <span className="h-1.5 bg-red-600 w-full" />
-            <span className="h-1.5 bg-amber-400 w-full" />
-          </div>
-          <div>
-            <span className="text-xs font-mono uppercase tracking-[0.3em] font-extrabold text-amber-300 block">
-              BUNDESREPUBLIK DEUTSCHLAND
-            </span>
-            <span className="text-[11px] text-stone-400">
-              {lang === 'de' ? 'Offizielles Interaktives Bildungsplakat' : 'Official Interactive Educational Poster'}
-            </span>
-          </div>
-        </div>
-
-        <div className="text-xs font-mono text-stone-400 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>{lang === 'de' ? 'Echtzeit-Mahlzeitensteuerung aktiv' : 'Real-time Day Clock Active'}</span>
-        </div>
-      </div>
 
       {/* Floating Interactive 3D Satellites */}
       {ORBITING_FOODS.map((food) => (
