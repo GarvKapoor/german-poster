@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Volume2, Info, Sparkles, Flame, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Volume2, Sparkles, Flame, MapPin, Info } from 'lucide-react';
 import { FoodItem, MealTime, MEAL_TIME_INFO, FOOD_ITEMS, Article } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
@@ -19,17 +20,12 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
   lang,
   slowAudio,
 }) => {
-  const [filterCategory, setFilterCategory] = useState<string>('all');
   const [speakingId, setSpeakingId] = useState<string | null>(null);
 
   const mealInfo = MEAL_TIME_INFO[selectedMeal];
 
   // Filter items matching the selected meal time
-  const currentItems = FOOD_ITEMS.filter((item) => {
-    const matchesMeal = item.mealTimes.includes(selectedMeal);
-    if (filterCategory === 'all') return matchesMeal;
-    return matchesMeal && item.category === filterCategory;
-  });
+  const currentItems = FOOD_ITEMS.filter((item) => item.mealTimes.includes(selectedMeal));
 
   const handlePronounce = async (e: React.MouseEvent, item: FoodItem) => {
     e.stopPropagation();
@@ -50,45 +46,48 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
     switch (article) {
       case 'der':
         return {
-          label: 'DER',
-          bg: 'bg-blue-600/20 text-blue-300 border-blue-500/40',
-          dot: 'bg-blue-500'
+          label: 'DER (Maskulin)',
+          bg: 'bg-blue-600/25 text-blue-300 border-blue-500/50',
         };
       case 'die':
         return {
-          label: 'DIE',
-          bg: 'bg-red-600/20 text-red-300 border-red-500/40',
-          dot: 'bg-red-500'
+          label: 'DIE (Feminin)',
+          bg: 'bg-red-600/25 text-red-300 border-red-500/50',
         };
       case 'das':
         return {
-          label: 'DAS',
-          bg: 'bg-emerald-600/20 text-emerald-300 border-emerald-500/40',
-          dot: 'bg-emerald-500'
+          label: 'DAS (Neutrum)',
+          bg: 'bg-emerald-600/25 text-emerald-300 border-emerald-500/50',
         };
     }
   };
 
   return (
-    <section id="speisen-bereich" className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section id="katalog" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 space-y-10 border-b border-stone-800 bg-stone-950">
       
-      {/* Meal Time Header & Dynamic Tabs */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-800 pb-8">
+      {/* Full Width Meal Time Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 border-b border-stone-800 pb-8"
+      >
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
             <Sparkles className="w-4 h-4" />
-            <span>{lang === 'de' ? 'Kulinarische Tageszeiten' : 'Meals of the Day'}</span>
+            <span>{lang === 'de' ? 'Speisenkatalog nach Tageszeiten' : 'Interactive Meal Catalog'}</span>
           </div>
-          <h2 className="font-display font-black text-3xl sm:text-4xl text-white mt-1">
+          <h2 className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight">
             {lang === 'de' ? mealInfo.titleDe : mealInfo.titleEn}
           </h2>
-          <p className="font-serif italic text-stone-400 text-base mt-1">
+          <p className="font-serif italic text-stone-300 text-base sm:text-lg mt-1">
             {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn} ({mealInfo.timeRange})
           </p>
         </div>
 
         {/* Meal Time Selector Pills */}
-        <div className="flex flex-wrap gap-2 p-1.5 bg-stone-900 rounded-2xl border border-stone-800">
+        <div className="flex flex-wrap gap-2 p-1.5 bg-stone-900 rounded-2xl border border-stone-800 shadow-inner self-start xl:self-auto">
           {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((time) => {
             const isSelected = selectedMeal === time;
             const info = MEAL_TIME_INFO[time];
@@ -99,9 +98,9 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
                   sound.playClick();
                   setSelectedMeal(time);
                 }}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
                   isSelected
-                    ? 'bg-amber-400 text-stone-950 shadow-md scale-105'
+                    ? 'bg-amber-400 text-stone-950 shadow-md font-extrabold scale-105'
                     : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800'
                 }`}
               >
@@ -110,40 +109,45 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Grammar Legend reminder: Der / Die / Das */}
-      <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-800/80 flex flex-wrap items-center justify-between gap-4 text-xs">
+      {/* Grammar Color Legend reminder across full width */}
+      <div className="w-full p-4 rounded-3xl bg-stone-900/60 border border-stone-800 flex flex-wrap items-center justify-between gap-4 text-xs">
         <span className="text-stone-300 font-medium">
-          💡 <strong>Grammatik-Tipp:</strong> {lang === 'de' ? 'Deutsche Nomen haben drei grammatikalische Geschlechter:' : 'German nouns have three grammatical genders:'}
+          💡 <strong>Grammatik-Tipp:</strong> {lang === 'de' ? 'Im Deutschen haben alle Lebensmittel ein grammatikalisches Geschlecht (Genus):' : 'German food nouns always carry one of three genders:'}
         </span>
-        <div className="flex items-center gap-3">
-          <span className="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="px-3 py-1 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold">
             DER (Maskulin)
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 border border-red-500/40 font-bold">
+          <span className="px-3 py-1 rounded-xl bg-red-500/20 text-red-300 border border-red-500/40 font-bold">
             DIE (Feminin)
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
+          <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
             DAS (Neutrum)
           </span>
         </div>
       </div>
 
-      {/* Grid of Food Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {currentItems.map((item) => {
+      {/* Grid of Food Cards across full width */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-8">
+        {currentItems.map((item, index) => {
           const badge = getArticleBadge(item.article);
           const isSpeaking = speakingId === item.id;
 
           return (
-            <div
+            <motion.div
               key={item.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.5, delay: (index % 4) * 0.1 }}
+              whileHover={{ y: -8 }}
               onClick={() => onSelectFood(item)}
-              className="group relative rounded-3xl bg-stone-900/90 border border-stone-800/80 hover:border-amber-400/50 shadow-xl hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+              className="group relative rounded-[2rem] bg-stone-900/90 border border-stone-800 hover:border-amber-400/50 shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer poster-grain"
             >
               {/* Card Image Banner */}
-              <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-stone-950">
+              <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-stone-950">
                 <img
                   src={item.image}
                   alt={item.name}
@@ -152,7 +156,7 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-black/40" />
 
-                {/* Article Badge (Der / Die / Das) */}
+                {/* Article Badge */}
                 <div className="absolute top-3 left-3 flex items-center gap-2">
                   <span className={`px-3 py-1 rounded-xl text-xs font-black tracking-wider border backdrop-blur-md ${badge.bg}`}>
                     {badge.label}
@@ -190,12 +194,12 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
               </div>
 
               {/* Card Content */}
-              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                 
                 {/* Title & English Subtitle */}
                 <div>
                   <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="font-display font-extrabold text-xl sm:text-2xl text-white group-hover:text-amber-300 transition-colors">
+                    <h3 className="font-display font-extrabold text-2xl text-white group-hover:text-amber-300 transition-colors">
                       {item.name}
                     </h3>
                     <span className="text-xs font-mono text-stone-400">
@@ -219,12 +223,12 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
                   ))}
                 </div>
 
-                {/* Short Cultural Description */}
+                {/* Short Description */}
                 <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
                   {lang === 'de' ? item.descriptionDe : item.descriptionEn}
                 </p>
 
-                {/* Conversational Sample Phrase with Speaker */}
+                {/* Conversational Sample Phrase */}
                 <div 
                   onClick={(e) => handleSentencePronounce(e, item.sampleSentenceDe)}
                   className="p-3 rounded-2xl bg-stone-950/70 border border-stone-800 hover:border-amber-400/40 transition-colors flex items-center justify-between gap-3 group/phrase"
@@ -255,7 +259,7 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
                 </div>
 
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

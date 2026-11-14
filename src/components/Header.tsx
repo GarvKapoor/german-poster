@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, Sparkles, Printer, Globe, UtensilsCrossed, Compass, Gamepad2, MessageSquareHeart } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 interface HeaderProps {
-  currentTab: string;
-  setCurrentTab: (tab: string) => void;
   lang: 'de' | 'en';
   setLang: (lang: 'de' | 'en') => void;
   soundEnabled: boolean;
@@ -15,8 +13,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentTab,
-  setCurrentTab,
   lang,
   setLang,
   soundEnabled,
@@ -25,9 +21,25 @@ export const Header: React.FC<HeaderProps> = ({
   slowAudio,
   setSlowAudio,
 }) => {
-  const handleTabClick = (tabId: string) => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollTo = (id: string) => {
     sound.playClick();
-    setCurrentTab(tabId);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const toggleSound = () => {
@@ -43,23 +55,33 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const navItems = [
-    { id: 'poster', labelDe: 'Plakat-Ansicht', labelEn: 'Poster Canvas', icon: Sparkles },
-    { id: 'meals', labelDe: 'Mahlzeiten', labelEn: 'Meal Times', icon: UtensilsCrossed },
-    { id: 'plate', labelDe: 'Mein Teller', labelEn: 'Plate Composer', icon: UtensilsCrossed },
-    { id: 'map', labelDe: 'Landkarte', labelEn: 'Specialty Map', icon: Compass },
-    { id: 'quiz', labelDe: 'Der-Die-Das Spiel', labelEn: 'Gender Duel', icon: Gamepad2 },
-    { id: 'dialogue', labelDe: 'Dialog-Labor', labelEn: 'Conversation Lab', icon: MessageSquareHeart },
+    { id: 'intro', labelDe: 'Plakat', labelEn: 'Poster', icon: Sparkles },
+    { id: 'panorama', labelDe: 'Panorama', labelEn: 'Day Panorama', icon: UtensilsCrossed },
+    { id: 'katalog', labelDe: 'Speisen', labelEn: 'Dishes', icon: UtensilsCrossed },
+    { id: 'teller', labelDe: 'Mein Teller', labelEn: 'Plate Composer', icon: UtensilsCrossed },
+    { id: 'landkarte', labelDe: 'Landkarte', labelEn: 'Specialty Map', icon: Compass },
+    { id: 'spiel', labelDe: 'Der-Die-Das Spiel', labelEn: 'Gender Duel', icon: Gamepad2 },
+    { id: 'dialoge', labelDe: 'Dialog-Labor', labelEn: 'Conversation Lab', icon: MessageSquareHeart },
   ];
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/80 border-b border-stone-800/80 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-stone-950/85 border-b border-stone-800/80 transition-all duration-300">
+      
+      {/* German Tricolor Scroll Progress Bar at the very top */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-stone-900 overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-stone-900 via-red-600 to-amber-400 transition-all duration-100 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
+      <div className="w-full px-4 sm:px-8 xl:px-12 2xl:px-16">
         <div className="flex items-center justify-between h-20">
           
           {/* Brand Logo with German Flag Accent */}
           <div 
-            onClick={() => handleTabClick('poster')}
-            className="flex items-center gap-3 cursor-pointer group select-none"
+            onClick={() => scrollTo('intro')}
+            className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
           >
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 via-red-600 to-stone-900 p-0.5 shadow-lg shadow-amber-500/10 group-hover:scale-105 transition-transform duration-300">
               <div className="w-full h-full bg-stone-950 rounded-[14px] flex items-center justify-center text-2xl">
@@ -82,21 +104,16 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Desktop Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-stone-900/90 rounded-2xl border border-stone-800/80 shadow-inner">
+          <nav className="hidden xl:flex items-center gap-1.5 p-1 bg-stone-900/90 rounded-2xl border border-stone-800/80 shadow-inner">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = currentTab === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleTabClick(item.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 ${
-                    isActive
-                      ? 'bg-amber-400 text-stone-950 shadow-md shadow-amber-400/25 scale-[1.02]'
-                      : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/60'
-                  }`}
+                  onClick={() => scrollTo(item.id)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide text-stone-300 hover:text-white hover:bg-stone-800/70 transition-all duration-200"
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-stone-950' : 'text-stone-400'}`} />
+                  <Icon className="w-3.5 h-3.5 text-amber-400" />
                   <span>{lang === 'de' ? item.labelDe : item.labelEn}</span>
                 </button>
               );
@@ -104,8 +121,8 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Utility Tools: Language, Audio Speed, Sound FX, Print */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Audio Speed (Slow / Normal) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Audio Speed */}
             <button
               onClick={() => {
                 sound.playClick();
@@ -118,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'border-stone-800 bg-stone-900 text-stone-400 hover:text-stone-200'
               }`}
             >
-              🐢 {slowAudio ? 'Langsam (0.7x)' : 'Normal (0.9x)'}
+              🐢 {slowAudio ? 'Langsam' : 'Normal'}
             </button>
 
             {/* Sound FX Toggle */}
@@ -154,21 +171,16 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile Navigation bar */}
-        <div className="lg:hidden flex items-center justify-between overflow-x-auto py-2.5 gap-2 border-t border-stone-900 no-scrollbar">
+        <div className="xl:hidden flex items-center overflow-x-auto py-2.5 gap-2 border-t border-stone-900 no-scrollbar">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentTab === item.id;
             return (
               <button
                 key={item.id}
-                onClick={() => handleTabClick(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs whitespace-nowrap font-medium transition-all ${
-                  isActive
-                    ? 'bg-amber-400 text-stone-950 font-bold shadow'
-                    : 'bg-stone-900/80 text-stone-400 border border-stone-800/60'
-                }`}
+                onClick={() => scrollTo(item.id)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs whitespace-nowrap font-medium bg-stone-900/80 text-stone-300 border border-stone-800/60"
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className="w-3.5 h-3.5 text-amber-400" />
                 <span>{lang === 'de' ? item.labelDe : item.labelEn}</span>
               </button>
             );

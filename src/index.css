@@ -3,22 +3,26 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-stone-950 text-stone-100 font-sans selection:bg-amber-500 selection:text-stone-950;
+    @apply bg-stone-950 text-stone-100 font-sans selection:bg-amber-400 selection:text-stone-950;
     overflow-x: hidden;
+    width: 100%;
   }
 }
 
 /* Custom German Poster Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #1c1917;
+  background: #0c0a09;
 }
 ::-webkit-scrollbar-thumb {
-  background: #44403c;
+  background: #292524;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -27,11 +31,22 @@
 
 /* Poster Grain Texture Effect */
 .poster-grain {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+  background-size: 28px 28px;
 }
 
-/* Smooth 3D tilt perspective */
+/* Diagonal poster ribbon stripes */
+.diagonal-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(245, 158, 11, 0.03),
+    rgba(245, 158, 11, 0.03) 15px,
+    transparent 15px,
+    transparent 30px
+  );
+}
+
+/* Perspective 3D utilities */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -39,7 +54,7 @@
   transform-style: preserve-3d;
 }
 
-/* Print Styles for physical poster grading */
+/* Print Styles */
 @media print {
   body {
     background: white !important;
@@ -50,10 +65,5 @@
   }
   .print-only {
     display: block !important;
-  }
-  .poster-card {
-    break-inside: avoid;
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
   }
 }

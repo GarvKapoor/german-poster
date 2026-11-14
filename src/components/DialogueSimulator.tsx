@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Volume2, MessageSquareHeart, Sparkles, User, Store, Play, CheckCircle } from 'lucide-react';
 import { DIALOGUE_SCENARIOS, DialogueScenario } from '../data/dialogues';
 import { speakGerman } from '../utils/speech';
@@ -25,7 +26,6 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
     for (let i = 0; i < selectedScenario.lines.length; i++) {
       setActiveLineIndex(i);
       await speakGerman(selectedScenario.lines[i].audioText, slowAudio ? 0.7 : 0.9);
-      // Brief pause between lines
       await new Promise(r => setTimeout(r, 600));
     }
 
@@ -34,10 +34,16 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
   };
 
   return (
-    <section className="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section id="dialoge" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-950 relative overflow-hidden">
       
       {/* Header */}
-      <div className="text-center space-y-2">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto text-center space-y-2 mb-10"
+      >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider">
           <MessageSquareHeart className="w-3.5 h-3.5 text-amber-400" />
           <span>{lang === 'de' ? 'Praxisnahe Sprachausgabe' : 'Conversational Audio Lab'}</span>
@@ -45,13 +51,13 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
         <h2 className="font-display font-black text-3xl sm:text-5xl text-white tracking-tight">
           {lang === 'de' ? 'Auf Deutsch bestellen & sprechen' : 'Order & Speak in German'}
         </h2>
-        <p className="font-serif italic text-stone-300 text-sm sm:text-base">
+        <p className="font-serif italic text-stone-300 text-base sm:text-lg">
           {lang === 'de' ? 'Lerne authentische Konversationen im Restaurant und beim Bäcker mit nativer Aussprache.' : 'Master authentic German conversations at the restaurant and bakery with native pronunciation.'}
         </p>
-      </div>
+      </motion.div>
 
       {/* Scenario Selector & Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-3xl bg-stone-900 border border-stone-800">
+      <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4 p-4 rounded-3xl bg-stone-900 border border-stone-800 mb-8">
         
         {/* Scenario Toggle */}
         <div className="flex gap-2">
@@ -65,7 +71,7 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
                   setSelectedScenario(sc);
                   setActiveLineIndex(null);
                 }}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
                   isSelected
                     ? 'bg-amber-400 text-stone-950 shadow-md font-extrabold scale-105'
                     : 'text-stone-400 hover:text-white bg-stone-950/60 border border-stone-800'
@@ -82,7 +88,7 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
         <button
           onClick={handlePlayFullDialogue}
           disabled={isPlayingAll}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition-all ${
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-2xl font-bold text-xs shadow-lg transition-all ${
             isPlayingAll
               ? 'bg-amber-500 text-stone-950 ring-4 ring-amber-400/40'
               : 'bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-stone-950 hover:scale-105'
@@ -94,13 +100,19 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
       </div>
 
       {/* Dialogue Timeline / Chat Stream */}
-      <div className="p-6 sm:p-10 rounded-[2.5rem] bg-stone-900 border border-stone-800 shadow-2xl space-y-6 poster-grain">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto p-6 sm:p-10 rounded-[2.8rem] bg-stone-900 border-2 border-stone-800 shadow-2xl space-y-6 poster-grain"
+      >
         
         {/* Location Subtitle */}
         <div className="flex items-center justify-between border-b border-stone-800 pb-4 text-xs">
           <span className="font-mono text-stone-400 flex items-center gap-1.5">
             <Store className="w-3.5 h-3.5 text-amber-400" />
-            <span>Ort: <strong>{selectedScenario.location}</strong></span>
+            <span>Ort: <strong className="text-white">{selectedScenario.location}</strong></span>
           </span>
           <span className="text-stone-500">
             {selectedScenario.lines.length} {lang === 'de' ? 'Gesprächsphasen' : 'dialogue turns'}
@@ -149,7 +161,7 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
                       {line.textEn}
                     </p>
 
-                    {/* Cultural Tip Pill if present */}
+                    {/* Cultural Tip */}
                     {line.tipDe && (
                       <div className="pt-2">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-400/10 border border-amber-400/20 text-[11px] text-amber-300">
@@ -187,7 +199,7 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
             <CheckCircle className="w-4 h-4 text-emerald-400" />
             <span>Deutsche Restaurant-Knigge (Cultural Etiquette)</span>
           </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-stone-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-stone-300 leading-relaxed">
             <p>
               • <strong>Trinkgeld:</strong> In Deutschland sind 5% bis 10% Trinkgeld üblich. Man sagt beim Bezahlen einfach den aufgerundeten Betrag (z.B. „25 Euro bitte!“).
             </p>
@@ -197,7 +209,7 @@ export const DialogueSimulator: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean
           </div>
         </div>
 
-      </div>
+      </motion.div>
 
     </section>
   );

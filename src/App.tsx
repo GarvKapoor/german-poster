@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { PosterHero } from './components/PosterHero';
+import { MealPanoramicStrip } from './components/MealPanoramicStrip';
+import { HorizontalFoodReel } from './components/HorizontalFoodReel';
 import { FoodGrid } from './components/FoodGrid';
-import { FoodDetailModal } from './components/FoodDetailModal';
 import { PlateBuilder } from './components/PlateBuilder';
-import { GenderQuiz } from './components/GenderQuiz';
 import { RegionalMap } from './components/RegionalMap';
+import { GenderQuiz } from './components/GenderQuiz';
 import { DialogueSimulator } from './components/DialogueSimulator';
+import { MarqueeBanner } from './components/MarqueeBanner';
+import { FloatingPosterHUD } from './components/FloatingPosterHUD';
+import { FoodDetailModal } from './components/FoodDetailModal';
 import { PosterExportModal } from './components/PosterExportModal';
 import { FoodItem, MealTime } from './data/foodData';
 import { initGermanVoice } from './utils/speech';
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<string>('poster');
   const [selectedMeal, setSelectedMeal] = useState<MealTime>('mittagessen');
   const [selectedFoodModal, setSelectedFoodModal] = useState<FoodItem | null>(null);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
@@ -24,13 +27,16 @@ export const App: React.FC = () => {
     initGermanVoice();
   }, []);
 
+  const scrollToDishes = () => {
+    const el = document.getElementById('katalog');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-400 selection:text-stone-950">
+    <div className="min-h-screen w-full bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-400 selection:text-stone-950 relative overflow-x-hidden">
       
-      {/* Navigation Header */}
+      {/* Sticky Top Navigation Header with German Tricolor Scroll Progress Bar */}
       <Header
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
         lang={lang}
         setLang={setLang}
         soundEnabled={soundEnabled}
@@ -40,32 +46,46 @@ export const App: React.FC = () => {
         setSlowAudio={setSlowAudio}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1">
-        {/* Poster Overview (Default View) */}
-        {currentTab === 'poster' && (
-          <div className="space-y-6">
-            <PosterHero
-              selectedMeal={selectedMeal}
-              setSelectedMeal={setSelectedMeal}
-              lang={lang}
-              onExploreClick={() => setCurrentTab('meals')}
-              slowAudio={slowAudio}
-            />
+      {/* Floating Side HUD for Quick Section Jumps */}
+      <FloatingPosterHUD />
 
-            {/* Quick Teaser of Food Items */}
-            <FoodGrid
-              selectedMeal={selectedMeal}
-              setSelectedMeal={setSelectedMeal}
-              onSelectFood={(item) => setSelectedFoodModal(item)}
-              lang={lang}
-              slowAudio={slowAudio}
-            />
-          </div>
-        )}
+      {/* CONTINUOUS SINGLE-PAGE POSTER JOURNEY */}
+      <main className="flex-1 w-full space-y-0">
+        
+        {/* 1. HERO POSTER SHOWCASE */}
+        <div id="intro" className="w-full">
+          <PosterHero
+            selectedMeal={selectedMeal}
+            setSelectedMeal={setSelectedMeal}
+            lang={lang}
+            onExploreClick={scrollToDishes}
+            slowAudio={slowAudio}
+          />
+        </div>
 
-        {/* Meal Times Explorer */}
-        {currentTab === 'meals' && (
+        {/* 2. INFINITE TICKER MARQUEE (100% Full Width) */}
+        <MarqueeBanner variant="gold" />
+
+        {/* 3. FULL-WIDTH 4-COLUMN DAY HORIZON PANORAMA */}
+        <div id="panorama" className="w-full">
+          <MealPanoramicStrip
+            selectedMeal={selectedMeal}
+            setSelectedMeal={setSelectedMeal}
+            onSelectFood={(item) => setSelectedFoodModal(item)}
+            lang={lang}
+            slowAudio={slowAudio}
+          />
+        </div>
+
+        {/* 4. EDGE-TO-EDGE HORIZONTAL FOOD REEL CAROUSEL */}
+        <HorizontalFoodReel
+          onSelectFood={(item) => setSelectedFoodModal(item)}
+          lang={lang}
+          slowAudio={slowAudio}
+        />
+
+        {/* 5. DEEP DIVE FOOD CATALOG */}
+        <div id="katalog" className="w-full">
           <FoodGrid
             selectedMeal={selectedMeal}
             setSelectedMeal={setSelectedMeal}
@@ -73,30 +93,34 @@ export const App: React.FC = () => {
             lang={lang}
             slowAudio={slowAudio}
           />
-        )}
+        </div>
 
-        {/* Interactive Plate Builder (Mein Teller) */}
-        {currentTab === 'plate' && (
+        {/* 6. REVERSE QUOTE MARQUEE BANNER */}
+        <MarqueeBanner reverse variant="dark" />
+
+        {/* 7. INTERACTIVE KITCHEN PLATE COMPOSER */}
+        <div id="teller" className="w-full">
           <PlateBuilder lang={lang} slowAudio={slowAudio} />
-        )}
+        </div>
 
-        {/* Regional Specialty Map */}
-        {currentTab === 'map' && (
+        {/* 8. INTERACTIVE REGIONAL SPECIALTIES MAP */}
+        <div id="landkarte" className="w-full">
           <RegionalMap lang={lang} slowAudio={slowAudio} />
-        )}
+        </div>
 
-        {/* Der / Die / Das Gamified Quiz */}
-        {currentTab === 'quiz' && (
+        {/* 9. DER-DIE-DAS GRAMMAR DUEL GAME */}
+        <div id="spiel" className="w-full">
           <GenderQuiz lang={lang} slowAudio={slowAudio} />
-        )}
+        </div>
 
-        {/* Conversational Ordering Simulator */}
-        {currentTab === 'dialogue' && (
+        {/* 10. REAL-LIFE RESTAURANT & BAKERY DIALOGUE LAB */}
+        <div id="dialoge" className="w-full">
           <DialogueSimulator lang={lang} slowAudio={slowAudio} />
-        )}
+        </div>
+
       </main>
 
-      {/* Detail Modal for any food */}
+      {/* Global Modals */}
       <FoodDetailModal
         food={selectedFoodModal}
         onClose={() => setSelectedFoodModal(null)}
@@ -104,26 +128,32 @@ export const App: React.FC = () => {
         slowAudio={slowAudio}
       />
 
-      {/* High-Resolution Printable Poster Modal */}
       <PosterExportModal
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
         lang={lang}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-stone-800/80 bg-stone-950 py-8 px-4 sm:px-6 lg:px-8 text-center text-xs text-stone-500 space-y-2">
-        <div className="flex items-center justify-center gap-2">
-          <span>🥨</span>
-          <span className="font-bold text-stone-300">Kulinarisches Deutschland</span>
-          <span>•</span>
-          <span>Interaktives Deutsches Lern- & Bildungsplakat</span>
+      {/* Cohesive Poster Footer */}
+      <footer className="border-t border-stone-800/80 bg-stone-950 py-12 px-4 sm:px-8 xl:px-12 text-center text-xs text-stone-500 space-y-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <span className="text-2xl">🥨</span>
+          <span className="font-display font-extrabold text-base text-white tracking-wide">
+            KULINARISCHES DEUTSCHLAND
+          </span>
+          <span className="text-stone-600">|</span>
+          <span className="text-stone-300 font-serif italic text-sm">
+            Das Interaktive Single-Page Bildungsplakat
+          </span>
         </div>
-        <p>
-          Themenbereich: <strong>Deutsches Essen & Mahlzeiten (Frühstück, Mittagessen, Abendessen)</strong>
+
+        <p className="text-stone-400">
+          Themenbereich: <strong>Deutsches Essen & Mahlzeiten (Frühstück, Mittagessen, Abendbrot)</strong>
         </p>
-        <p className="text-[11px] text-stone-600">
-          Entwickelt mit React, TypeScript, Tailwind CSS & Web Speech API für maximale Interaktivität und kreative Noten.
+
+        <p className="text-[11px] text-stone-600 max-w-xl mx-auto">
+          Gestaltet nach Schweizer & Bauhaus-Plakatästhetik mit flüssigen Scroll-Animationen, 
+          Web Audio API, nativer de-DE Sprachsynthese und 100% voller Breiten-Ausnutzung ohne Leerräume.
         </p>
       </footer>
 

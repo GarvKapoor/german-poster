@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Volume2, Trophy, Flame, Sparkles, RefreshCw, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { Article } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
@@ -44,7 +45,7 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
   const currentItem = QUIZ_ITEMS[currentIndex % QUIZ_ITEMS.length];
 
   const handleAnswer = async (selectedArticle: Article) => {
-    if (feedback !== null) return; // Prevent double taps
+    if (feedback !== null) return;
 
     setLastSelected(selectedArticle);
     const isCorrect = selectedArticle === currentItem.article;
@@ -75,10 +76,8 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
       setStreak(0);
     }
 
-    // Pronounce the correct answer
     await speakGerman(`${currentItem.article} ${currentItem.word}`, slowAudio ? 0.7 : 0.9);
 
-    // Wait a brief moment, then advance to next card
     setTimeout(() => {
       setFeedback(null);
       setLastSelected(null);
@@ -87,7 +86,7 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
       } else {
         setCurrentIndex(i => i + 1);
       }
-    }, 1400);
+    }, 1300);
   };
 
   const handleRestart = () => {
@@ -101,27 +100,33 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
   };
 
   return (
-    <section className="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section id="spiel" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-900/30 relative overflow-hidden">
       
       {/* Quiz Header */}
-      <div className="text-center space-y-2">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto text-center space-y-2 mb-10"
+      >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>{lang === 'de' ? 'Grammatik-Duell' : 'Grammar Arena'}</span>
+          <span>{lang === 'de' ? 'Grammatik-Duell' : 'Grammar Duel Arena'}</span>
         </div>
         <h2 className="font-display font-black text-3xl sm:text-5xl text-white tracking-tight">
           Der, Die oder Das?
         </h2>
-        <p className="font-serif italic text-stone-300 text-sm sm:text-base">
+        <p className="font-serif italic text-stone-300 text-base sm:text-lg">
           {lang === 'de' ? 'Teste dein Wissen über das grammatikalische Geschlecht deutscher Lebensmittel!' : 'Test your knowledge on the grammatical gender of iconic German foods!'}
         </p>
-      </div>
+      </motion.div>
 
       {/* Score & Streak Bar */}
-      <div className="grid grid-cols-3 gap-3 p-4 rounded-3xl bg-stone-900 border border-stone-800 text-center shadow-lg">
+      <div className="max-w-3xl mx-auto grid grid-cols-3 gap-3 p-4 rounded-3xl bg-stone-900 border border-stone-800 text-center shadow-2xl mb-8">
         <div>
           <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider flex items-center justify-center gap-1">
-            <Trophy className="w-3 h-3 text-amber-400" />
+            <Trophy className="w-3.5 h-3.5 text-amber-400" />
             <span>Punkte</span>
           </span>
           <span className="font-display font-black text-xl sm:text-2xl text-amber-400">{score}</span>
@@ -129,7 +134,7 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
 
         <div>
           <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider flex items-center justify-center gap-1">
-            <Flame className="w-3 h-3 text-red-500" />
+            <Flame className="w-3.5 h-3.5 text-red-500" />
             <span>Serie (Streak)</span>
           </span>
           <span className="font-display font-black text-xl sm:text-2xl text-red-400">
@@ -146,133 +151,141 @@ export const GenderQuiz: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = (
       </div>
 
       {/* Main Flashcard Container */}
-      {!gameOver ? (
-        <div className="relative p-8 sm:p-12 rounded-[2.5rem] bg-stone-900 border-2 border-stone-800 shadow-2xl flex flex-col items-center justify-center text-center space-y-6 poster-grain">
-          
-          {/* Card Emoji & Word */}
-          <div className="space-y-3">
-            <span className="text-6xl sm:text-7xl block select-none animate-float">
-              {currentItem.emoji}
-            </span>
-            <div>
-              <span className="text-xs uppercase tracking-widest font-mono text-stone-500 block mb-1">
-                {lang === 'de' ? 'Welcher Artikel gehört dazu?' : 'Which article belongs here?'}
-              </span>
-              <h3 className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight">
-                {feedback ? `${currentItem.article.toUpperCase()} ` : ''}{currentItem.word}
-              </h3>
-              <p className="text-stone-400 text-sm italic mt-1">
-                ({currentItem.english})
-              </p>
-            </div>
-          </div>
-
-          {/* Answer Buttons (Der / Die / Das) */}
-          <div className="w-full max-w-md grid grid-cols-3 gap-3 sm:gap-4 pt-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-3xl mx-auto"
+      >
+        {!gameOver ? (
+          <div className="relative p-8 sm:p-12 rounded-[2.8rem] bg-stone-900 border-2 border-stone-800 shadow-2xl flex flex-col items-center justify-center text-center space-y-6 poster-grain">
             
-            {/* DER Button (Blue) */}
-            <button
-              onClick={() => handleAnswer('der')}
-              disabled={feedback !== null}
-              className={`py-4 sm:py-5 px-3 rounded-2xl font-black text-lg sm:text-xl tracking-wider transition-all shadow-lg ${
-                feedback && currentItem.article === 'der'
-                  ? 'bg-blue-600 text-white ring-4 ring-blue-400 scale-105'
-                  : feedback && lastSelected === 'der'
-                  ? 'bg-red-900 text-white'
-                  : 'bg-blue-600/90 hover:bg-blue-500 text-white hover:scale-105 active:scale-95'
-              }`}
-            >
-              DER
-            </button>
+            {/* Card Emoji & Word */}
+            <div className="space-y-3">
+              <span className="text-7xl sm:text-8xl block select-none animate-float">
+                {currentItem.emoji}
+              </span>
+              <div>
+                <span className="text-xs uppercase tracking-widest font-mono text-stone-500 block mb-1">
+                  {lang === 'de' ? 'Welcher Artikel gehört dazu?' : 'Which article belongs here?'}
+                </span>
+                <h3 className="font-display font-black text-4xl sm:text-6xl text-white tracking-tight">
+                  {feedback ? `${currentItem.article.toUpperCase()} ` : ''}{currentItem.word}
+                </h3>
+                <p className="text-stone-400 text-sm sm:text-base italic mt-1">
+                  ({currentItem.english})
+                </p>
+              </div>
+            </div>
 
-            {/* DIE Button (Red) */}
-            <button
-              onClick={() => handleAnswer('die')}
-              disabled={feedback !== null}
-              className={`py-4 sm:py-5 px-3 rounded-2xl font-black text-lg sm:text-xl tracking-wider transition-all shadow-lg ${
-                feedback && currentItem.article === 'die'
-                  ? 'bg-red-600 text-white ring-4 ring-red-400 scale-105'
-                  : feedback && lastSelected === 'die'
-                  ? 'bg-red-900 text-white'
-                  : 'bg-red-600/90 hover:bg-red-500 text-white hover:scale-105 active:scale-95'
-              }`}
-            >
-              DIE
-            </button>
+            {/* Answer Buttons (Der / Die / Das) */}
+            <div className="w-full max-w-md grid grid-cols-3 gap-3 sm:gap-4 pt-4">
+              
+              {/* DER Button (Blue) */}
+              <button
+                onClick={() => handleAnswer('der')}
+                disabled={feedback !== null}
+                className={`py-5 px-3 rounded-2xl font-black text-xl sm:text-2xl tracking-wider transition-all shadow-xl ${
+                  feedback && currentItem.article === 'der'
+                    ? 'bg-blue-600 text-white ring-4 ring-blue-400 scale-105'
+                    : feedback && lastSelected === 'der'
+                    ? 'bg-red-900 text-white'
+                    : 'bg-blue-600/90 hover:bg-blue-500 text-white hover:scale-105 active:scale-95'
+                }`}
+              >
+                DER
+              </button>
 
-            {/* DAS Button (Green) */}
-            <button
-              onClick={() => handleAnswer('das')}
-              disabled={feedback !== null}
-              className={`py-4 sm:py-5 px-3 rounded-2xl font-black text-lg sm:text-xl tracking-wider transition-all shadow-lg ${
-                feedback && currentItem.article === 'das'
-                  ? 'bg-emerald-600 text-white ring-4 ring-emerald-400 scale-105'
-                  : feedback && lastSelected === 'das'
-                  ? 'bg-red-900 text-white'
-                  : 'bg-emerald-600/90 hover:bg-emerald-500 text-white hover:scale-105 active:scale-95'
-              }`}
-            >
-              DAS
-            </button>
+              {/* DIE Button (Red) */}
+              <button
+                onClick={() => handleAnswer('die')}
+                disabled={feedback !== null}
+                className={`py-5 px-3 rounded-2xl font-black text-xl sm:text-2xl tracking-wider transition-all shadow-xl ${
+                  feedback && currentItem.article === 'die'
+                    ? 'bg-red-600 text-white ring-4 ring-red-400 scale-105'
+                    : feedback && lastSelected === 'die'
+                    ? 'bg-red-900 text-white'
+                    : 'bg-red-600/90 hover:bg-red-500 text-white hover:scale-105 active:scale-95'
+                }`}
+              >
+                DIE
+              </button>
 
-          </div>
+              {/* DAS Button (Green) */}
+              <button
+                onClick={() => handleAnswer('das')}
+                disabled={feedback !== null}
+                className={`py-5 px-3 rounded-2xl font-black text-xl sm:text-2xl tracking-wider transition-all shadow-xl ${
+                  feedback && currentItem.article === 'das'
+                    ? 'bg-emerald-600 text-white ring-4 ring-emerald-400 scale-105'
+                    : feedback && lastSelected === 'das'
+                    ? 'bg-red-900 text-white'
+                    : 'bg-emerald-600/90 hover:bg-emerald-500 text-white hover:scale-105 active:scale-95'
+                }`}
+              >
+                DAS
+              </button>
 
-          {/* Feedback Display */}
-          {feedback && (
-            <div className={`w-full max-w-md p-4 rounded-2xl border text-sm font-medium animate-fadeIn ${
-              feedback === 'correct'
-                ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200'
-                : 'bg-red-950/80 border-red-500 text-red-200'
-            }`}>
-              <div className="flex items-center justify-center gap-2 font-bold mb-1">
-                {feedback === 'correct' ? (
-                  <>
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                    <span>Richtig! Ausgezeichnet!</span>
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="w-5 h-5 text-red-400" />
-                    <span>Leider falsch! Es heißt: {currentItem.article.toUpperCase()} {currentItem.word}</span>
-                  </>
+            </div>
+
+            {/* Feedback Display */}
+            {feedback && (
+              <div className={`w-full max-w-md p-4 rounded-2xl border text-sm font-medium animate-fadeIn ${
+                feedback === 'correct'
+                  ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200'
+                  : 'bg-red-950/80 border-red-500 text-red-200'
+              }`}>
+                <div className="flex items-center justify-center gap-2 font-bold mb-1">
+                  {feedback === 'correct' ? (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      <span>Richtig! Ausgezeichnet!</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-5 h-5 text-red-400" />
+                      <span>Leider falsch! Es heißt: {currentItem.article.toUpperCase()} {currentItem.word}</span>
+                    </>
+                  )}
+                </div>
+                {currentItem.ruleExplanation && (
+                  <p className="text-xs text-stone-300 italic mt-1">
+                    💡 {currentItem.ruleExplanation}
+                  </p>
                 )}
               </div>
-              {currentItem.ruleExplanation && (
-                <p className="text-xs text-stone-300 italic mt-1">
-                  💡 {currentItem.ruleExplanation}
-                </p>
-              )}
+            )}
+
+            {/* Rule Info Helper */}
+            <div className="pt-2 text-stone-400 text-xs flex items-center justify-center gap-1.5">
+              <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Klicke auf den passenden Artikel, um sofort die Sprachausgabe zu hören.</span>
             </div>
-          )}
 
-          {/* Rule Info Helper */}
-          <div className="pt-2 text-stone-400 text-xs flex items-center justify-center gap-1.5">
-            <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
-            <span>Klicke auf den passenden Artikel, um sofort die Sprachausgabe zu hören.</span>
           </div>
-
-        </div>
-      ) : (
-        /* Game Over Celebratory Summary */
-        <div className="p-8 sm:p-12 rounded-[2.5rem] bg-stone-900 border-2 border-amber-400/50 text-center space-y-6 shadow-2xl">
-          <div className="text-6xl animate-bounce">🎉</div>
-          <h3 className="font-display font-black text-3xl sm:text-4xl text-white">
-            Wunderbar gemeistert!
-          </h3>
-          <p className="text-stone-300 max-w-md mx-auto text-sm">
-            Du hast alle {QUIZ_ITEMS.length} deutschen Lebensmittel erfolgreich geübt und stolze <strong className="text-amber-400">{score} Punkte</strong> erzielt!
-          </p>
-          <div className="flex justify-center gap-4 pt-2">
-            <button
-              onClick={handleRestart}
-              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm shadow-xl transition-all hover:scale-105"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span>Noch einmal spielen</span>
-            </button>
+        ) : (
+          /* Game Over Celebratory Summary */
+          <div className="p-8 sm:p-12 rounded-[2.8rem] bg-stone-900 border-2 border-amber-400/50 text-center space-y-6 shadow-2xl">
+            <div className="text-6xl animate-bounce">🎉</div>
+            <h3 className="font-display font-black text-3xl sm:text-4xl text-white">
+              Wunderbar gemeistert!
+            </h3>
+            <p className="text-stone-300 max-w-md mx-auto text-sm">
+              Du hast alle {QUIZ_ITEMS.length} deutschen Lebensmittel erfolgreich geübt und stolze <strong className="text-amber-400">{score} Punkte</strong> erzielt!
+            </p>
+            <div className="flex justify-center gap-4 pt-2">
+              <button
+                onClick={handleRestart}
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm shadow-xl transition-all hover:scale-105"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Noch einmal spielen</span>
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </motion.div>
 
     </section>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Volume2, Sparkles, RefreshCw, ChefHat, Flame, Utensils } from 'lucide-react';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
@@ -8,7 +9,7 @@ interface DishOption {
   id: string;
   name: string;
   article: 'der' | 'die' | 'das';
-  accusative: string; // "ein Schnitzel", "einen Kartoffelsalat", "eine Apfelschorle"
+  accusative: string;
   emoji: string;
   calories: number;
   type: 'main' | 'side' | 'drink' | 'dessert';
@@ -52,9 +53,7 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
 
   const totalCalories = selectedMain.calories + selectedSide.calories + selectedDrink.calories + (selectedDessert?.calories || 0);
 
-  // Generate authentic German order sentence
   const generatedSentenceDe = `Ich hätte gerne ${selectedMain.accusative} mit ${selectedSide.accusative}, dazu ${selectedDrink.accusative}${selectedDessert ? ` und als Nachspeise ${selectedDessert.accusative}` : ''}, bitte! Guten Appetit!`;
-
   const generatedSentenceEn = `I would like ${selectedMain.name.toLowerCase()} with ${selectedSide.name.toLowerCase()}, together with ${selectedDrink.name.toLowerCase()}${selectedDessert ? ` and for dessert ${selectedDessert.name.toLowerCase()}` : ''}, please! Enjoy your meal!`;
 
   const handleSpeakOrder = async () => {
@@ -78,8 +77,8 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
 
     try {
       confetti({
-        particleCount: 40,
-        spread: 60,
+        particleCount: 45,
+        spread: 70,
         origin: { y: 0.7 }
       });
     } catch {
@@ -88,51 +87,64 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
   };
 
   return (
-    <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section id="teller" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 border-b border-stone-800 bg-stone-900/40 relative overflow-hidden">
       
-      {/* Title */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-800 pb-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-800 pb-6 mb-10"
+      >
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
             <Utensils className="w-4 h-4" />
-            <span>{lang === 'de' ? 'Interaktive Küchen-Werkstatt' : 'Interactive German Plate Composer'}</span>
+            <span>{lang === 'de' ? 'Interaktive Teller-Werkstatt' : 'Interactive Plate Composer'}</span>
           </div>
-          <h2 className="font-display font-black text-3xl sm:text-4xl text-white mt-1">
+          <h2 className="font-display font-black text-3xl sm:text-5xl text-white mt-1 tracking-tight">
             {lang === 'de' ? 'Stell deinen deutschen Teller zusammen' : 'Build Your German Feast'}
           </h2>
-          <p className="font-serif italic text-stone-400 text-sm sm:text-base mt-1">
-            {lang === 'de' ? 'Wähle deine Lieblingskomponenten und lerne, das Gericht auf Deutsch zu bestellen!' : 'Compose your favorite dishes and practice ordering like a native German!'}
+          <p className="font-serif italic text-stone-300 text-base sm:text-lg mt-1">
+            {lang === 'de' ? 'Wähle deine Lieblingskomponenten und lerne, das Gericht auf Deutsch im Akkusativ zu bestellen!' : 'Compose your favorite dishes and practice ordering in German!'}
           </p>
         </div>
 
         <button
           onClick={handleRandomize}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-stone-800 hover:bg-stone-700 text-amber-300 border border-stone-700 font-bold text-xs shadow-md transition-all self-start md:self-auto hover:scale-105"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs shadow-xl transition-all self-start md:self-auto hover:scale-105"
         >
-          <RefreshCw className="w-3.5 h-3.5" />
+          <RefreshCw className="w-4 h-4" />
           <span>{lang === 'de' ? 'Zufälliges Menü würfeln' : 'Surprise German Menu'}</span>
         </button>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Grid spanning full width */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         
-        {/* Left: The Virtual Porcelain Plate Simulator */}
-        <div className="lg:col-span-5 flex flex-col items-center">
-          <div className="relative w-full max-w-md aspect-square rounded-[3rem] bg-gradient-to-b from-stone-900 via-stone-950 to-stone-900 border-2 border-stone-800 p-8 flex flex-col items-center justify-center shadow-2xl shadow-black relative overflow-hidden group">
+        {/* Left Column: Virtual Porcelain Plate Simulator */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="lg:col-span-5 flex flex-col items-center"
+        >
+          <div className="relative w-full max-w-lg aspect-square rounded-[3rem] bg-gradient-to-b from-stone-900 via-stone-950 to-stone-900 border-2 border-stone-800 p-8 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden group poster-grain">
             
             {/* Ambient Warm Light Underneath Plate */}
             <div className="absolute inset-0 bg-radial from-amber-500/10 via-transparent to-transparent pointer-events-none" />
 
             {/* Porcelain Plate Rim */}
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-gradient-to-tr from-stone-200 via-stone-100 to-white shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_2px_10px_rgba(255,255,255,0.9)] border-8 border-stone-300/40 flex items-center justify-center p-4">
+            <div className="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-stone-200 via-stone-100 to-white shadow-[0_25px_60px_rgba(0,0,0,0.7),inset_0_2px_12px_rgba(255,255,255,0.9)] border-8 border-stone-300/40 flex items-center justify-center p-4">
               
               {/* Inner Plate Depression */}
-              <div className="relative w-full h-full rounded-full bg-gradient-to-br from-stone-100 to-stone-200 shadow-inner flex flex-wrap items-center justify-center gap-2 p-4">
+              <div className="relative w-full h-full rounded-full bg-gradient-to-br from-stone-100 to-stone-200 shadow-inner flex flex-wrap items-center justify-center gap-3 p-4">
                 
                 {/* Main Food Item */}
                 <div 
                   title={selectedMain.name}
-                  className="text-5xl sm:text-6xl transform -rotate-6 hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-md"
+                  className="text-6xl sm:text-7xl transform -rotate-6 hover:scale-125 transition-transform duration-300 cursor-pointer drop-shadow-md select-none"
                 >
                   {selectedMain.emoji}
                 </div>
@@ -140,7 +152,7 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                 {/* Side Dish */}
                 <div 
                   title={selectedSide.name}
-                  className="text-4xl sm:text-5xl transform rotate-12 hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-md"
+                  className="text-5xl sm:text-6xl transform rotate-12 hover:scale-125 transition-transform duration-300 cursor-pointer drop-shadow-md select-none"
                 >
                   {selectedSide.emoji}
                 </div>
@@ -149,7 +161,7 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                 {selectedDessert && (
                   <div 
                     title={selectedDessert.name}
-                    className="text-3xl sm:text-4xl transform -rotate-12 hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-md"
+                    className="text-4xl sm:text-5xl transform -rotate-12 hover:scale-125 transition-transform duration-300 cursor-pointer drop-shadow-md select-none"
                   >
                     {selectedDessert.emoji}
                   </div>
@@ -160,32 +172,32 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
             {/* Drink beside the plate */}
             <div 
               title={selectedDrink.name}
-              className="absolute bottom-6 right-6 text-4xl sm:text-5xl transform hover:scale-110 transition-transform duration-300 cursor-pointer drop-shadow-lg"
+              className="absolute bottom-6 right-6 text-5xl sm:text-6xl transform hover:scale-125 transition-transform duration-300 cursor-pointer drop-shadow-xl select-none"
             >
               {selectedDrink.emoji}
             </div>
 
             {/* Total Energy Badge */}
-            <div className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-900 border border-stone-800 text-xs text-stone-300">
-              <Flame className="w-3.5 h-3.5 text-amber-400" />
-              <span>Gesamt-Nährwert: <strong className="text-amber-300">{totalCalories} kcal</strong></span>
+            <div className="mt-6 flex items-center gap-2 px-5 py-2 rounded-full bg-stone-900/90 border border-stone-700 text-xs text-stone-300 shadow">
+              <Flame className="w-4 h-4 text-amber-400" />
+              <span>Gesamter Nährwert: <strong className="text-amber-300 text-sm">{totalCalories} kcal</strong></span>
             </div>
 
           </div>
 
           {/* Dynamic Generated German Sentence Box */}
-          <div className="w-full max-w-md mt-6 p-5 rounded-3xl bg-stone-900/90 border border-amber-500/30 space-y-3 shadow-xl">
+          <div className="w-full max-w-lg mt-6 p-6 rounded-3xl bg-stone-900 border border-amber-500/40 space-y-3 shadow-2xl poster-grain">
             <div className="flex items-center justify-between">
               <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{lang === 'de' ? 'Generierter Bestellsatz:' : 'Dynamic German Sentence:'}</span>
+                <Sparkles className="w-4 h-4" />
+                <span>{lang === 'de' ? 'Generierter Bestellsatz:' : 'Dynamic German Order Sentence:'}</span>
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-400">
-                Akkusativ-Übung
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-300 border border-stone-700">
+                Akkusativ & Dativ
               </span>
             </div>
 
-            <p className="text-sm font-semibold text-white leading-relaxed">
+            <p className="text-sm sm:text-base font-semibold text-white leading-relaxed">
               „{generatedSentenceDe}“
             </p>
 
@@ -196,30 +208,36 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
             <button
               onClick={handleSpeakOrder}
               disabled={isSpeaking}
-              className={`w-full py-3 px-4 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+              className={`w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
                 isSpeaking
                   ? 'bg-amber-500 text-stone-950 scale-[1.02]'
-                  : 'bg-amber-400 hover:bg-amber-300 text-stone-950 shadow-md shadow-amber-400/20'
+                  : 'bg-amber-400 hover:bg-amber-300 text-stone-950 shadow-lg shadow-amber-400/20'
               }`}
             >
               <Volume2 className={`w-4 h-4 ${isSpeaking ? 'animate-bounce' : ''}`} />
               <span>{isSpeaking ? 'Liest Menü vor...' : (lang === 'de' ? 'Gesamten Bestellsatz anhören' : 'Hear Complete German Order')}</span>
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right: Ingredient Selectors */}
-        <div className="lg:col-span-7 space-y-6">
+        {/* Right Column: Wide Ingredient Selectors */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="lg:col-span-7 space-y-6"
+        >
 
-          {/* 1. Hauptspeise (Main) */}
-          <div className="p-5 rounded-3xl bg-stone-900/80 border border-stone-800 space-y-3">
+          {/* 1. Hauptspeise */}
+          <div className="p-6 rounded-3xl bg-stone-900/90 border border-stone-800 space-y-3 shadow-xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-wider text-stone-300 flex items-center gap-2">
                 <span>1.</span> {lang === 'de' ? 'Hauptspeise wählen' : 'Choose Main Course'}
               </h3>
               <span className="text-xs font-semibold text-amber-400">{selectedMain.name}</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
               {MAIN_OPTIONS.map((item) => (
                 <button
                   key={item.id}
@@ -227,31 +245,31 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                     sound.playClick();
                     setSelectedMain(item);
                   }}
-                  className={`p-3 rounded-2xl text-left border text-xs transition-all flex items-center gap-2.5 ${
+                  className={`p-3.5 rounded-2xl text-left border text-xs transition-all flex items-center gap-3 ${
                     selectedMain.id === item.id
-                      ? 'border-amber-400 bg-amber-400/10 text-white font-bold ring-1 ring-amber-400'
-                      : 'border-stone-800 bg-stone-950/60 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
+                      ? 'border-amber-400 bg-amber-400/15 text-white font-bold ring-2 ring-amber-400 shadow-md'
+                      : 'border-stone-800 bg-stone-950/70 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
                   }`}
                 >
-                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="text-3xl">{item.emoji}</span>
                   <div className="truncate">
-                    <span className="block truncate">{item.name}</span>
-                    <span className="text-[10px] text-stone-500 block">~{item.calories} kcal</span>
+                    <span className="block truncate font-bold text-white">{item.name}</span>
+                    <span className="text-[10px] text-stone-400 block">~{item.calories} kcal</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 2. Beilage (Side) */}
-          <div className="p-5 rounded-3xl bg-stone-900/80 border border-stone-800 space-y-3">
+          {/* 2. Beilage */}
+          <div className="p-6 rounded-3xl bg-stone-900/90 border border-stone-800 space-y-3 shadow-xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-wider text-stone-300 flex items-center gap-2">
                 <span>2.</span> {lang === 'de' ? 'Klassische Beilage' : 'Choose German Side'}
               </h3>
               <span className="text-xs font-semibold text-amber-400">{selectedSide.name}</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {SIDE_OPTIONS.map((item) => (
                 <button
                   key={item.id}
@@ -259,31 +277,31 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                     sound.playClick();
                     setSelectedSide(item);
                   }}
-                  className={`p-3 rounded-2xl text-left border text-xs transition-all flex items-center gap-2.5 ${
+                  className={`p-3.5 rounded-2xl text-left border text-xs transition-all flex items-center gap-3 ${
                     selectedSide.id === item.id
-                      ? 'border-amber-400 bg-amber-400/10 text-white font-bold ring-1 ring-amber-400'
-                      : 'border-stone-800 bg-stone-950/60 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
+                      ? 'border-amber-400 bg-amber-400/15 text-white font-bold ring-2 ring-amber-400 shadow-md'
+                      : 'border-stone-800 bg-stone-950/70 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
                   }`}
                 >
-                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="text-3xl">{item.emoji}</span>
                   <div className="truncate">
-                    <span className="block truncate">{item.name}</span>
-                    <span className="text-[10px] text-stone-500 block">~{item.calories} kcal</span>
+                    <span className="block truncate font-bold text-white">{item.name}</span>
+                    <span className="text-[10px] text-stone-400 block">~{item.calories} kcal</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 3. Getränk (Drink) */}
-          <div className="p-5 rounded-3xl bg-stone-900/80 border border-stone-800 space-y-3">
+          {/* 3. Getränk */}
+          <div className="p-6 rounded-3xl bg-stone-900/90 border border-stone-800 space-y-3 shadow-xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-wider text-stone-300 flex items-center gap-2">
                 <span>3.</span> {lang === 'de' ? 'Typisches Getränk' : 'Choose Beverage'}
               </h3>
               <span className="text-xs font-semibold text-amber-400">{selectedDrink.name}</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {DRINK_OPTIONS.map((item) => (
                 <button
                   key={item.id}
@@ -291,40 +309,40 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                     sound.playClick();
                     setSelectedDrink(item);
                   }}
-                  className={`p-3 rounded-2xl text-left border text-xs transition-all flex items-center gap-2.5 ${
+                  className={`p-3.5 rounded-2xl text-left border text-xs transition-all flex items-center gap-3 ${
                     selectedDrink.id === item.id
-                      ? 'border-amber-400 bg-amber-400/10 text-white font-bold ring-1 ring-amber-400'
-                      : 'border-stone-800 bg-stone-950/60 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
+                      ? 'border-amber-400 bg-amber-400/15 text-white font-bold ring-2 ring-amber-400 shadow-md'
+                      : 'border-stone-800 bg-stone-950/70 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
                   }`}
                 >
-                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="text-3xl">{item.emoji}</span>
                   <div className="truncate">
-                    <span className="block truncate">{item.name}</span>
-                    <span className="text-[10px] text-stone-500 block">~{item.calories} kcal</span>
+                    <span className="block truncate font-bold text-white">{item.name}</span>
+                    <span className="text-[10px] text-stone-400 block">~{item.calories} kcal</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 4. Nachspeise (Dessert) */}
-          <div className="p-5 rounded-3xl bg-stone-900/80 border border-stone-800 space-y-3">
+          {/* 4. Nachspeise */}
+          <div className="p-6 rounded-3xl bg-stone-900/90 border border-stone-800 space-y-3 shadow-xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-wider text-stone-300 flex items-center gap-2">
                 <span>4.</span> {lang === 'de' ? 'Süße Nachspeise (Optional)' : 'Sweet Dessert (Optional)'}
               </h3>
               <span className="text-xs font-semibold text-amber-400">{selectedDessert ? selectedDessert.name : 'Keine'}</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               <button
                 onClick={() => {
                   sound.playClick();
                   setSelectedDessert(null);
                 }}
-                className={`p-3 rounded-2xl text-center border text-xs transition-all ${
+                className={`p-3.5 rounded-2xl text-center border text-xs transition-all ${
                   selectedDessert === null
-                    ? 'border-amber-400 bg-amber-400/10 text-white font-bold'
-                    : 'border-stone-800 bg-stone-950/60 text-stone-400 hover:bg-stone-800'
+                    ? 'border-amber-400 bg-amber-400/15 text-white font-bold ring-2 ring-amber-400'
+                    : 'border-stone-800 bg-stone-950/70 text-stone-400 hover:bg-stone-800'
                 }`}
               >
                 🚫 {lang === 'de' ? 'Ohne Nachtisch' : 'No Dessert'}
@@ -336,23 +354,23 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
                     sound.playClick();
                     setSelectedDessert(item);
                   }}
-                  className={`p-3 rounded-2xl text-left border text-xs transition-all flex items-center gap-2.5 ${
+                  className={`p-3.5 rounded-2xl text-left border text-xs transition-all flex items-center gap-3 ${
                     selectedDessert?.id === item.id
-                      ? 'border-amber-400 bg-amber-400/10 text-white font-bold ring-1 ring-amber-400'
-                      : 'border-stone-800 bg-stone-950/60 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
+                      ? 'border-amber-400 bg-amber-400/15 text-white font-bold ring-2 ring-amber-400 shadow-md'
+                      : 'border-stone-800 bg-stone-950/70 text-stone-400 hover:text-stone-200 hover:bg-stone-800'
                   }`}
                 >
-                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="text-3xl">{item.emoji}</span>
                   <div className="truncate">
-                    <span className="block truncate">{item.name}</span>
-                    <span className="text-[10px] text-stone-500 block">~{item.calories} kcal</span>
+                    <span className="block truncate font-bold text-white">{item.name}</span>
+                    <span className="text-[10px] text-stone-400 block">~{item.calories} kcal</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
 
