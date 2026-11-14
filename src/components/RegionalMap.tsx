@@ -4,10 +4,13 @@ import { Volume2, Compass, MapPin, Sparkles, Lightbulb } from 'lucide-react';
 import { GERMAN_REGIONS, RegionSpecialty } from '../data/regions';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
+import { useScrollDirection } from '../utils/useScrollDirection';
 
 export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = ({ lang, slowAudio }) => {
   const [selectedRegion, setSelectedRegion] = useState<RegionSpecialty>(GERMAN_REGIONS[0]);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const { scrollDirection } = useScrollDirection();
+  const dirY = scrollDirection === 'down' ? 35 : -35;
 
   const handleSelect = (region: RegionSpecialty) => {
     sound.playClick();
@@ -26,10 +29,10 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
       
       {/* Section Header */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: dirY }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.15 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="border-b border-stone-800 pb-6 mb-10"
       >
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
@@ -48,10 +51,10 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
         
         {/* Left Column: Interactive Stylized SVG Map of Germany */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: -35, y: dirY * 0.5 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-6 flex flex-col items-center"
         >
           <div className="relative w-full aspect-[4/5] max-h-[520px] rounded-[2.8rem] bg-stone-900 border-2 border-stone-800 p-6 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden poster-grain">
@@ -135,10 +138,10 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
 
         {/* Right Column: Detailed Regional Showcase Card */}
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: 35, y: dirY * 0.5 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-6 space-y-6"
         >
           <div className="p-8 sm:p-10 rounded-[2.8rem] bg-stone-900 border-2 border-stone-800 shadow-2xl space-y-6 poster-grain relative overflow-hidden">

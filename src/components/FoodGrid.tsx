@@ -4,6 +4,7 @@ import { Volume2, Sparkles, Flame, MapPin, Info } from 'lucide-react';
 import { FoodItem, MealTime, MEAL_TIME_INFO, FOOD_ITEMS, Article } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
+import { useScrollDirection } from '../utils/useScrollDirection';
 
 interface FoodGridProps {
   selectedMeal: MealTime;
@@ -21,6 +22,8 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
   slowAudio,
 }) => {
   const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const { scrollDirection } = useScrollDirection();
+  const dirY = scrollDirection === 'down' ? 35 : -35;
 
   const mealInfo = MEAL_TIME_INFO[selectedMeal];
 
@@ -65,12 +68,12 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
   return (
     <section id="katalog" className="w-full py-16 px-4 sm:px-8 xl:px-12 2xl:px-16 space-y-10 border-b border-stone-800 bg-stone-950">
       
-      {/* Full Width Meal Time Header */}
+      {/* Full Width Meal Time Header with directional entrance */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: dirY }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.15 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 border-b border-stone-800 pb-8"
       >
         <div>
@@ -138,10 +141,10 @@ export const FoodGrid: React.FC<FoodGridProps> = ({
           return (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: dirY }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5, delay: (index % 4) * 0.1 }}
+              viewport={{ once: false, amount: 0.1 }}
+              transition={{ duration: 0.5, delay: (index % 4) * 0.08, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -8 }}
               onClick={() => onSelectFood(item)}
               className="group relative rounded-[2rem] bg-stone-900/90 border border-stone-800 hover:border-amber-400/50 shadow-2xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer poster-grain"

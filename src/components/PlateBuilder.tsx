@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, Sparkles, RefreshCw, ChefHat, Flame, Utensils } from 'lucide-react';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
 import confetti from 'canvas-confetti';
+import { useScrollDirection } from '../utils/useScrollDirection';
 
 interface DishOption {
   id: string;
@@ -45,6 +46,9 @@ const DESSERT_OPTIONS: DishOption[] = [
 ];
 
 export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = ({ lang, slowAudio }) => {
+  const { scrollDirection } = useScrollDirection();
+  const dirY = scrollDirection === 'down' ? 35 : -35;
+
   const [selectedMain, setSelectedMain] = useState<DishOption>(MAIN_OPTIONS[0]);
   const [selectedSide, setSelectedSide] = useState<DishOption>(SIDE_OPTIONS[0]);
   const [selectedDrink, setSelectedDrink] = useState<DishOption>(DRINK_OPTIONS[0]);
@@ -91,10 +95,10 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
       
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: dirY }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.15 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-stone-800 pb-6 mb-10"
       >
         <div>
@@ -124,10 +128,10 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
         
         {/* Left Column: Virtual Porcelain Plate Simulator */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: -35, y: dirY * 0.5 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-5 flex flex-col items-center"
         >
           <div className="relative w-full max-w-lg aspect-square rounded-[3rem] bg-gradient-to-b from-stone-900 via-stone-950 to-stone-900 border-2 border-stone-800 p-8 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden group poster-grain">
@@ -222,10 +226,10 @@ export const PlateBuilder: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> =
 
         {/* Right Column: Wide Ingredient Selectors */}
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: 35, y: dirY * 0.5 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-7 space-y-6"
         >
 

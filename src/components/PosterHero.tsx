@@ -5,6 +5,7 @@ import { MealTime, MEAL_TIME_INFO } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
 import { KineticHeroTitle } from './KineticHeroTitle';
+import { useScrollDirection } from '../utils/useScrollDirection';
 
 interface PosterHeroProps {
   timeHour: number;
@@ -26,6 +27,9 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
   slowAudio,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollDirection } = useScrollDirection();
+  const dirY = scrollDirection === 'down' ? 40 : -40;
+
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [glareX, setGlareX] = useState(50);
@@ -88,10 +92,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
       <motion.div
         id="details-card"
         ref={cardRef}
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: dirY }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: false, amount: 0.15 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
@@ -110,10 +114,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
 
         {/* Poster Top Banner */}
         <motion.div 
-          initial={{ opacity: 0, y: -15 }}
+          initial={{ opacity: 0, y: dirY * -0.4 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.15 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="relative z-10 border-b border-stone-800 pb-5 flex flex-wrap items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
@@ -138,10 +142,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
           
           {/* Left Column: Bold Cultural Pillars & Speech Actions */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: -30, y: dirY * 0.5 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-5"
           >
             
@@ -228,10 +232,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
 
           {/* Right Column: Giant Porcelain Plate Visual */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9, x: 30 }}
-            whileInView={{ opacity: 1, scale: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.9, x: 30, y: dirY * 0.5 }}
+            whileInView={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col items-center justify-center"
           >
             <div className="relative w-full max-w-sm aspect-square rounded-3xl bg-gradient-to-br from-stone-800/90 to-stone-950 border border-stone-700/80 p-6 flex flex-col justify-between shadow-2xl overflow-hidden group poster-grain">
@@ -307,10 +311,10 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
 
         {/* Poster Bottom Bar */}
         <motion.div 
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: dirY * 0.4 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="relative z-10 border-t border-stone-800 pt-4 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-400"
         >
           <div className="flex items-center gap-2">
