@@ -9,7 +9,6 @@ import { RegionalMap } from './components/RegionalMap';
 import { MarqueeBanner } from './components/MarqueeBanner';
 import { FloatingPosterHUD } from './components/FloatingPosterHUD';
 import { FoodDetailModal } from './components/FoodDetailModal';
-import { PosterExportModal } from './components/PosterExportModal';
 import { FoodItem, MealTime } from './data/foodData';
 import { initGermanVoice } from './utils/speech';
 
@@ -17,7 +16,6 @@ export const App: React.FC = () => {
   const [timeHour, setTimeHour] = useState<number>(12);
   const [selectedMeal, setSelectedMeal] = useState<MealTime>('mittagessen');
   const [selectedFoodModal, setSelectedFoodModal] = useState<FoodItem | null>(null);
-  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [lang, setLang] = useState<'de' | 'en'>('de');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [slowAudio, setSlowAudio] = useState(false);
@@ -57,7 +55,6 @@ export const App: React.FC = () => {
         setLang={setLang}
         soundEnabled={soundEnabled}
         setSoundEnabled={setSoundEnabled}
-        onOpenPrintModal={() => setIsPrintModalOpen(true)}
         slowAudio={slowAudio}
         setSlowAudio={setSlowAudio}
       />
@@ -139,12 +136,6 @@ export const App: React.FC = () => {
         onClose={() => setSelectedFoodModal(null)}
         lang={lang}
         slowAudio={slowAudio}
-      />
-
-      <PosterExportModal
-        isOpen={isPrintModalOpen}
-        onClose={() => setIsPrintModalOpen(false)}
-        lang={lang}
       />
 
       {/* Cohesive Poster Footer */}

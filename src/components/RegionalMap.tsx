@@ -232,6 +232,20 @@ export const RegionalMap: React.FC<{ lang: 'de' | 'en'; slowAudio: boolean }> = 
 
       </div>
 
+      {/* Return to Top of Poster Button */}
+      <div className="w-full flex justify-center pt-8">
+        <button
+          onClick={() => {
+            sound.playClick();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-stone-900/90 hover:bg-amber-400 text-stone-200 hover:text-stone-950 border border-stone-700 hover:border-amber-400 text-xs sm:text-sm font-bold transition-all shadow-xl hover:scale-105 group/btn"
+        >
+          <span>{lang === 'de' ? 'Zurück zum Anfang des Plakats' : 'Back to Top of Poster'}</span>
+          <span className="text-amber-400 group-hover/btn:text-stone-950 transition-colors">↑</span>
+        </button>
+      </div>
+
     </section>
   );
 };

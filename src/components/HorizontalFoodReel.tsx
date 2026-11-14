@@ -164,6 +164,20 @@ export const HorizontalFoodReel: React.FC<HorizontalFoodReelProps> = ({
         </div>
       </div>
 
+      {/* Forward Action Button */}
+      <div className="w-full flex justify-center pt-8">
+        <button
+          onClick={() => {
+            sound.playClick();
+            document.getElementById('katalog')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-stone-900/90 hover:bg-amber-400 text-stone-200 hover:text-stone-950 border border-stone-700 hover:border-amber-400 text-xs sm:text-sm font-bold transition-all shadow-xl hover:scale-105 group/btn"
+        >
+          <span>{lang === 'de' ? 'Zum Speisenkatalog vorblättern' : 'Explore Complete Food Catalog'}</span>
+          <span className="text-amber-400 group-hover/btn:text-stone-950 transition-colors">↓</span>
+        </button>
+      </div>
+
     </section>
   );
 };

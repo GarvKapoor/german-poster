@@ -335,50 +335,65 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
       </div>
 
       {/* Bottom Live Interactive Meal Indicators */}
-      <div className="relative z-10 pt-6 border-t border-stone-800/80 grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
-        {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal) => {
-          const isCurrent = selectedMeal === meal;
-          return (
-            <button
-              key={meal}
-              onClick={() => {
-                sound.playClick();
-                setSelectedMeal(meal);
-                // Also update timeHour to match
-                if (meal === 'fruehstueck') setTimeHour(8);
-                if (meal === 'mittagessen') setTimeHour(13);
-                if (meal === 'kaffee') setTimeHour(16);
-                if (meal === 'abendbrot') setTimeHour(19);
-              }}
-              className={`p-3.5 rounded-2xl border text-left transition-all ${
-                isCurrent
-                  ? 'bg-amber-400 text-stone-950 border-amber-300 font-bold shadow-xl shadow-amber-400/20 scale-[1.02]'
-                  : 'bg-stone-950/70 text-stone-400 border-stone-800 hover:text-white hover:bg-stone-900'
-              }`}
-            >
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="uppercase text-[10px] font-black tracking-wider opacity-80">
-                  {meal === 'fruehstueck' && '06:30 - 10:00'}
-                  {meal === 'mittagessen' && '12:00 - 14:00'}
-                  {meal === 'kaffee' && '15:00 - 17:00'}
-                  {meal === 'abendbrot' && '18:30 - 20:30'}
+      <div className="relative z-10 pt-6 border-t border-stone-800/80 space-y-4 w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+          {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((meal) => {
+            const isCurrent = selectedMeal === meal;
+            return (
+              <button
+                key={meal}
+                onClick={() => {
+                  sound.playClick();
+                  setSelectedMeal(meal);
+                  if (meal === 'fruehstueck') setTimeHour(8);
+                  if (meal === 'mittagessen') setTimeHour(13);
+                  if (meal === 'kaffee') setTimeHour(16);
+                  if (meal === 'abendbrot') setTimeHour(19);
+                }}
+                className={`p-3.5 rounded-2xl border text-left transition-all ${
+                  isCurrent
+                    ? 'bg-amber-400 text-stone-950 border-amber-300 font-bold shadow-xl shadow-amber-400/20 scale-[1.02]'
+                    : 'bg-stone-950/70 text-stone-400 border-stone-800 hover:text-white hover:bg-stone-900'
+                }`}
+              >
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="uppercase text-[10px] font-black tracking-wider opacity-80">
+                    {meal === 'fruehstueck' && '06:30 - 10:00'}
+                    {meal === 'mittagessen' && '12:00 - 14:00'}
+                    {meal === 'kaffee' && '15:00 - 17:00'}
+                    {meal === 'abendbrot' && '18:30 - 20:30'}
+                  </span>
+                  <span className="text-xl">
+                    {meal === 'fruehstueck' && '🥐'}
+                    {meal === 'mittagessen' && '🥩'}
+                    {meal === 'kaffee' && '🍰'}
+                    {meal === 'abendbrot' && '🥖'}
+                  </span>
+                </div>
+                <span className="font-display font-extrabold text-sm sm:text-base block truncate">
+                  {meal === 'fruehstueck' && (lang === 'de' ? 'Das Frühstück' : 'Breakfast')}
+                  {meal === 'mittagessen' && (lang === 'de' ? 'Das Mittagessen' : 'Lunch')}
+                  {meal === 'kaffee' && (lang === 'de' ? 'Kaffee & Kuchen' : 'Afternoon Coffee')}
+                  {meal === 'abendbrot' && (lang === 'de' ? 'Das Abendbrot' : 'Supper')}
                 </span>
-                <span className="text-xl">
-                  {meal === 'fruehstueck' && '🥐'}
-                  {meal === 'mittagessen' && '🥩'}
-                  {meal === 'kaffee' && '🍰'}
-                  {meal === 'abendbrot' && '🥖'}
-                </span>
-              </div>
-              <span className="font-display font-extrabold text-sm sm:text-base block truncate">
-                {meal === 'fruehstueck' && (lang === 'de' ? 'Das Frühstück' : 'Breakfast')}
-                {meal === 'mittagessen' && (lang === 'de' ? 'Das Mittagessen' : 'Lunch')}
-                {meal === 'kaffee' && (lang === 'de' ? 'Kaffee & Kuchen' : 'Afternoon Coffee')}
-                {meal === 'abendbrot' && (lang === 'de' ? 'Das Abendbrot' : 'Supper')}
-              </span>
-            </button>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Forward Navigation Button */}
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={() => {
+              sound.playClick();
+              document.getElementById('details-card')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-stone-900/90 hover:bg-amber-400 text-stone-300 hover:text-stone-950 border border-stone-700/80 hover:border-amber-400 text-xs font-bold transition-all shadow-lg hover:scale-105 group/btn"
+          >
+            <span>{lang === 'de' ? 'Zum 3D-Ausstellungsplakat vorblättern' : 'Explore 3D Poster Details'}</span>
+            <span className="text-amber-400 group-hover/btn:text-stone-950 transition-colors">↓</span>
+          </button>
+        </div>
       </div>
 
     </div>

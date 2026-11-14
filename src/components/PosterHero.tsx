@@ -65,6 +65,11 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
     setIsSpeaking(false);
   };
 
+  const scrollToSection = (id: string) => {
+    sound.playClick();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="w-full relative space-y-0 overflow-hidden">
       
@@ -80,6 +85,7 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
 
       {/* 2. INTERACTIVE 3D SWISS / BAUHAUS POSTER DETAILS (DIV 2: Covers full screen, balanced typography) */}
       <div
+        id="details-card"
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -174,14 +180,11 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
               </button>
 
               <button
-                onClick={() => {
-                  sound.playClick();
-                  onExploreClick();
-                }}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-stone-800/80 hover:bg-stone-700/80 border border-stone-700 text-stone-200 text-xs sm:text-sm font-semibold transition-all hover:scale-105"
+                onClick={() => scrollToSection('panorama')}
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 text-xs sm:text-sm font-bold transition-all shadow-lg hover:scale-105"
               >
-                <span>{lang === 'de' ? 'Speisenkatalog ansehen' : 'Explore Dishes'}</span>
-                <ChevronRight className="w-4 h-4 text-amber-400" />
+                <span>{lang === 'de' ? 'Weiter zum Tageszeiten-Panorama' : 'Explore Day Horizon'}</span>
+                <span>↓</span>
               </button>
             </div>
 

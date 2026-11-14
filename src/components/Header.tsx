@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Printer, Globe, Sun, Moon } from 'lucide-react';
+import { Volume2, VolumeX, Globe, Sun, Moon } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { MealTime } from '../data/foodData';
 
@@ -12,7 +12,6 @@ interface HeaderProps {
   setLang: (lang: 'de' | 'en') => void;
   soundEnabled: boolean;
   setSoundEnabled: (enabled: boolean) => void;
-  onOpenPrintModal: () => void;
   slowAudio: boolean;
   setSlowAudio: (slow: boolean) => void;
 }
@@ -26,7 +25,6 @@ export const Header: React.FC<HeaderProps> = ({
   setLang,
   soundEnabled,
   setSoundEnabled,
-  onOpenPrintModal,
   slowAudio,
   setSlowAudio,
 }) => {
@@ -99,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Center: Dynamic Sun/Moon Time Arc Controller (Covers the center of navbar) */}
+          {/* Center: Dynamic Sun/Moon Time Arc Controller */}
           <div className="flex items-center gap-3 sm:gap-4 bg-stone-900/90 px-4 sm:px-6 py-2 rounded-2xl border border-stone-700/80 shadow-inner flex-1 max-w-xl mx-2 sm:mx-6 justify-center">
             <span className="text-xs font-mono text-stone-300 flex items-center gap-1.5 shrink-0">
               {timeHour < 18 ? (
@@ -131,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </div>
 
-          {/* Right: Audio Speed, Sound FX, Lang, Print */}
+          {/* Right: Audio Speed, Sound FX, Lang */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Audio Speed */}
             <button
@@ -165,18 +163,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Globe className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'de' ? 'DE' : 'EN'}</span>
-            </button>
-
-            {/* Printable Poster Modal Trigger */}
-            <button
-              onClick={() => {
-                sound.playClick();
-                onOpenPrintModal();
-              }}
-              className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-stone-950 font-bold text-xs shadow-md shadow-red-600/20 hover:scale-105 transition-all"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>{lang === 'de' ? 'Plakat Drucken' : 'Print Poster'}</span>
             </button>
           </div>
         </div>
