@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Volume2, Sparkles, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MealTime, MEAL_TIME_INFO } from '../data/foodData';
 import { speakGerman } from '../utils/speech';
 import { sound } from '../utils/sound';
@@ -251,53 +251,85 @@ export const PosterHero: React.FC<PosterHeroProps> = ({
                 </span>
               </div>
 
-              {/* Card Center: Animated Food Plate Visual */}
+              {/* Card Center: Animated Food Plate Visual with Spring Morph */}
               <div className="relative z-10 my-auto text-center py-2">
                 <div className="relative inline-block">
-                  <div className="w-40 h-40 sm:w-48 sm:h-48 mx-auto rounded-full bg-gradient-to-tr from-stone-800 via-stone-750 to-stone-900 p-2.5 shadow-2xl border-4 border-stone-600/40 flex items-center justify-center relative">
-                    <div className="absolute -top-5 text-xl opacity-60 animate-steam">💨</div>
-                    <div className="text-6xl sm:text-7xl select-none transform transition-transform group-hover:scale-110 duration-500 animate-float">
-                      {selectedMeal === 'fruehstueck' && '🥐'}
-                      {selectedMeal === 'mittagessen' && '🥩'}
-                      {selectedMeal === 'kaffee' && '🍰'}
-                      {selectedMeal === 'abendbrot' && '🥖'}
-                    </div>
+                  <div className="w-40 h-40 sm:w-48 sm:h-48 mx-auto rounded-full bg-gradient-to-tr from-stone-800 via-stone-750 to-stone-900 p-2.5 shadow-2xl border-4 border-stone-600/40 flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute -top-4 text-xl opacity-60 animate-steam">💨</div>
+                    
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={selectedMeal}
+                        initial={{ scale: 0.2, rotate: -25, opacity: 0 }}
+                        animate={{ scale: [0.2, 1.25, 1], rotate: [-25, 6, 0], opacity: 1 }}
+                        exit={{ scale: 0.2, rotate: 25, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 450, damping: 22 }}
+                        className="text-6xl sm:text-7xl select-none"
+                      >
+                        {selectedMeal === 'fruehstueck' && '🥐'}
+                        {selectedMeal === 'mittagessen' && '🥩'}
+                        {selectedMeal === 'kaffee' && '🍰'}
+                        {selectedMeal === 'abendbrot' && '🥖'}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
 
-                <h3 className="font-display font-black text-2xl text-white mt-3 tracking-tight">
-                  {lang === 'de' ? mealInfo.titleDe : mealInfo.titleEn}
-                </h3>
-                <p className="font-serif italic text-amber-300 text-xs sm:text-sm mt-0.5 px-4">
-                  {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn}
-                </p>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={selectedMeal}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.22 }}
+                  >
+                    <h3 className="font-display font-black text-2xl text-white mt-3 tracking-tight">
+                      {lang === 'de' ? mealInfo.titleDe : mealInfo.titleEn}
+                    </h3>
+                    <p className="font-serif italic text-amber-300 text-xs sm:text-sm mt-0.5 px-4">
+                      {lang === 'de' ? mealInfo.quoteDe : mealInfo.quoteEn}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              {/* Card Bottom: Meal switcher buttons */}
+              {/* Card Bottom: Animated Spring Meal switcher buttons */}
               <div className="relative z-10 grid grid-cols-4 gap-1.5 bg-stone-900/90 p-1.5 rounded-2xl border border-stone-800">
-                {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => {
-                      sound.playClick();
-                      setSelectedMeal(m);
-                      if (m === 'fruehstueck') setTimeHour(8);
-                      if (m === 'mittagessen') setTimeHour(13);
-                      if (m === 'kaffee') setTimeHour(16);
-                      if (m === 'abendbrot') setTimeHour(19);
-                    }}
-                    className={`py-2 px-1 text-[11px] font-bold rounded-xl transition-all truncate text-center ${
-                      selectedMeal === m
-                        ? 'bg-amber-400 text-stone-950 shadow-md font-extrabold scale-105'
-                        : 'text-stone-400 hover:text-white hover:bg-stone-800'
-                    }`}
-                  >
-                    {m === 'fruehstueck' && 'Frühstück'}
-                    {m === 'mittagessen' && 'Mittag'}
-                    {m === 'kaffee' && 'Kaffee'}
-                    {m === 'abendbrot' && 'Abend'}
-                  </button>
-                ))}
+                {(['fruehstueck', 'mittagessen', 'kaffee', 'abendbrot'] as MealTime[]).map((m) => {
+                  const isCurrent = selectedMeal === m;
+                  return (
+                    <button
+                      key={m}
+                      onClick={() => {
+                        sound.playClick();
+                        setSelectedMeal(m);
+                        if (m === 'fruehstueck') setTimeHour(8);
+                        if (m === 'mittagessen') setTimeHour(13);
+                        if (m === 'kaffee') setTimeHour(16);
+                        if (m === 'abendbrot') setTimeHour(19);
+                      }}
+                      className={`relative py-2 px-1 text-[11px] font-bold rounded-xl transition-colors truncate text-center ${
+                        isCurrent
+                          ? 'text-stone-950 font-extrabold'
+                          : 'text-stone-400 hover:text-white'
+                      }`}
+                    >
+                      {isCurrent && (
+                        <motion.div
+                          layoutId="plateActiveMealTab"
+                          transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                          className="absolute inset-0 bg-amber-400 rounded-xl shadow-md"
+                        />
+                      )}
+                      <span className="relative z-10">
+                        {m === 'fruehstueck' && 'Frühstück'}
+                        {m === 'mittagessen' && 'Mittag'}
+                        {m === 'kaffee' && 'Kaffee'}
+                        {m === 'abendbrot' && 'Abend'}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
             </div>

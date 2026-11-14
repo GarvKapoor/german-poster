@@ -383,13 +383,20 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                   if (meal === 'kaffee') setTimeHour(16);
                   if (meal === 'abendbrot') setTimeHour(19);
                 }}
-                className={`p-3.5 rounded-2xl border text-left transition-all ${
+                className={`relative p-3.5 rounded-2xl border text-left transition-all ${
                   isCurrent
-                    ? 'bg-amber-400 text-stone-950 border-amber-300 font-bold shadow-xl shadow-amber-400/20 scale-[1.02]'
+                    ? 'border-amber-300 text-stone-950 font-bold shadow-xl shadow-amber-400/20 scale-[1.02]'
                     : 'bg-stone-950/70 text-stone-400 border-stone-800 hover:text-white hover:bg-stone-900'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs mb-1">
+                {isCurrent && (
+                  <motion.div
+                    layoutId="heroActiveMealPill"
+                    transition={{ type: "spring", stiffness: 480, damping: 32 }}
+                    className="absolute inset-0 bg-amber-400 rounded-2xl"
+                  />
+                )}
+                <div className="relative z-10 flex items-center justify-between text-xs mb-1">
                   <span className="uppercase text-[10px] font-black tracking-wider opacity-80">
                     {meal === 'fruehstueck' && '06:30 - 10:00'}
                     {meal === 'mittagessen' && '12:00 - 14:00'}
@@ -403,7 +410,7 @@ export const KineticHeroTitle: React.FC<KineticHeroTitleProps> = ({
                     {meal === 'abendbrot' && '🥖'}
                   </span>
                 </div>
-                <span className="font-display font-extrabold text-sm sm:text-base block truncate">
+                <span className="relative z-10 font-display font-extrabold text-sm sm:text-base block truncate">
                   {meal === 'fruehstueck' && (lang === 'de' ? 'Das Frühstück' : 'Breakfast')}
                   {meal === 'mittagessen' && (lang === 'de' ? 'Das Mittagessen' : 'Lunch')}
                   {meal === 'kaffee' && (lang === 'de' ? 'Kaffee & Kuchen' : 'Afternoon Coffee')}
